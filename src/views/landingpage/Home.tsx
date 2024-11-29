@@ -19,7 +19,42 @@ const Home: React.FC = () => {
 
             <SlideshowLandingPage/>
             <br/>
-            <HeaderWithBackground headerText={"Neuigkeiten"}/>
+            <HeaderWithBackground headerText={"Einsätze"}/>
+            <Grid container spacing={4} sx={{ margin: '0 auto', justifyContent: 'center', width: '100%' }}>
+                <Grid item xs={12} sm={1.4} md={1.4}>
+
+                </Grid>
+                <Grid item xs={12} sm={3} md={3}>
+                    <ImageWithText
+                        text="Verkehrsunfall"
+                        title="T03V"
+                        imageUrl="/images/FFHausMitAutos.jpg"
+                        link={"impressum"}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={3} md={3}>
+                    <ImageWithText
+                        text="Verkehrsunfall"
+                        title="T03V"
+                        imageUrl="/images/FFHausMitAutos.jpg"
+                        link={"impressum"}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={3} md={3}>
+                    <ImageWithText
+                        text="Verkehrsunfall"
+                        title="T03V"
+                        imageUrl="/images/FFHausMitAutos.jpg"
+                        link={"impressum"}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={1.4} md={1.4}>
+
+                </Grid>
+            </Grid>
+
+
+            <HeaderWithBackground headerText={"Tätigkeiten"}/>
             <Grid container spacing={4} sx={{ margin: '0 auto', justifyContent: 'center', width: '100%' }}>
                 <Grid item xs={12} sm={1.4} md={1.4}>
 
