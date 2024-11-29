@@ -9,6 +9,7 @@ import {APIProvider, useAPI} from "./common/context/DataContext";
 import Impressum from "./views/impressum/Impressum";
 import CookiePopup from "./components/popups/CookiePopup";
 import Home from "./views/landingpage/Home";
+import Mitglieder from "./views/mitglieder/Mitglieder";
 
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
                             <Route path="/" element={<Layout/>}>
                                   {<Route path={"/"} element={<Home/>}/>}
                                   <Route path="/impressum" element={<Impressum/>}/>
+                                  <Route path="/mannschaft" element={<Mitglieder/>}/>
                             </Route>
                         </Routes>
                     </BrowserRouter>

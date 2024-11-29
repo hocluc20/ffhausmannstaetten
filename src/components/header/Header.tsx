@@ -28,11 +28,11 @@ const Header: React.FC = () => {
 
     // Menüelemente
     const menuItems = [
-        { text: "Startseite", icon: <Home />, link: "#" },
-        { text: "Über Uns", icon: <Info />, link: "#" },
+        { text: "Home", icon: <Home />, link: "/" },
+        { text: "Mitglieder", icon: <Info />, link: "/mannschaft" },
         { text: "Einsätze", icon: <Build />, link: "#" },
-        { text: "Kontakt", icon: <Contacts />, link: "#" },
-        { text: "Impressum", icon: <Contacts />, link: "/impressum" },
+        { text: "Tätigkeiten", icon: <Build />, link: "#" },
+        { text: "Kontakt & Impressum", icon: <Contacts />, link: "/impressum" },
     ];
 
     return (
