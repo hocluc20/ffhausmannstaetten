@@ -6,6 +6,10 @@ import {ThemeProvider} from "@mui/material";
 import theme from "./theme";
 
 import {APIProvider, useAPI} from "./common/context/DataContext";
+import Impressum from "./views/impressum/Impressum";
+import CookiePopup from "./components/popups/CookiePopup";
+import Home from "./views/landingpage/Home";
+
 
 function App() {
 
@@ -15,10 +19,11 @@ function App() {
             <APIProvider>
                 <ThemeProvider theme={theme}>
                     <BrowserRouter>
+                        <CookiePopup/>
                         <Routes>
                             <Route path="/" element={<Layout/>}>
-                                {/*  {<Route index element={<Overview/>}/>}*/}
-                                {/*  <Route path="/users" element={<Userview/>}/>*/}
+                                  {<Route path={"/"} element={<Home/>}/>}
+                                  <Route path="/impressum" element={<Impressum/>}/>
                             </Route>
                         </Routes>
                     </BrowserRouter>

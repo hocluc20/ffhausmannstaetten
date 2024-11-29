@@ -53,6 +53,7 @@ const Footer: React.FC = () => {
                                 alignItems: "center",
                                 mt: 2,
                                 // color: theme.palette.warning.light,
+                                fontFamily: '"Roboto", "Arial", sans-serif',
                             }}
                         >
                             <Email sx={{ mr: 1 }} /> kdo.020@bfvgu.steiermark.at

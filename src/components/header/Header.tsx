@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import {
     AppBar,
     Toolbar,
-    Typography,
     Box,
     IconButton,
     Button,
@@ -14,6 +13,7 @@ import {
     ListItemText,
     Divider,
     useTheme,
+    Typography,
 } from "@mui/material";
 import { Menu as MenuIcon, Home, Info, Contacts, Build } from "@mui/icons-material";
 
@@ -32,7 +32,7 @@ const Header: React.FC = () => {
         { text: "Über Uns", icon: <Info />, link: "#" },
         { text: "Einsätze", icon: <Build />, link: "#" },
         { text: "Kontakt", icon: <Contacts />, link: "#" },
-        { text: "Impressum", icon: <Contacts />, link: "#" },
+        { text: "Impressum", icon: <Contacts />, link: "/impressum" },
     ];
 
     return (
@@ -44,50 +44,28 @@ const Header: React.FC = () => {
                     background: `linear-gradient(135deg, ${theme.palette.error.dark}, ${theme.palette.error.main})`,
                 }}
             >
-                <Toolbar>
-                    {/* Menü-Icon (für mobile Navigation) */}
-                    <IconButton
-                        edge="start"
-                        color="inherit"
-                        aria-label="menu"
-                        onClick={toggleDrawer(true)}
-                        sx={{ mr: 2 }}
-                    >
-                        <MenuIcon />
-                    </IconButton>
-
+                <Toolbar sx={{ display: 'flex', alignItems: 'center' }}>
                     {/* Titel / Logo */}
-                    {/*<Typography*/}
-                    {/*    variant="h6"*/}
-                    {/*    component="div"*/}
-                    {/*    sx={{*/}
-                    {/*        flexGrow: 1,*/}
-                    {/*        fontWeight: "bold",*/}
-                    {/*        borderBottom: `3px solid ${theme.palette.warning.main}`,*/}
-                    {/*        pb: 0.5,*/}
-                    {/*    }}*/}
-                    {/*>*/}
-                    {/*    Freiwillige Feuerwehr Hausmannstätten*/}
-                    {/*</Typography>*/}
-
                     <img
-                        src="/LogoLaptop.png"  // Bild aus dem 'public' Ordner direkt ansprechen
+                        src="/LogoLaptop.png"
                         alt="Freiwillige Feuerwehr Hausmannstätten"
                         style={{
                             height: '80px',
                             width: 'auto',
                             borderBottom: `3px solid ${theme.palette.warning.main}`,
                             paddingBottom: '0.5rem',
-                            marginRight: '250px'
+                            marginRight: 'auto',
                         }}
                     />
-
 
                     {/* Navigation Links (nur für größere Bildschirme sichtbar) */}
                     <Box
                         sx={{
-                            display: {xs: "none", sm: "flex"},
+                            display: { xs: "none", sm: "flex" },
                             gap: 2,
+                            justifyContent: "center",
+                            alignItems: "center",
+                            flexGrow: 1,
                         }}
                     >
                         {menuItems.map((item) => (
@@ -101,11 +79,27 @@ const Header: React.FC = () => {
                             </Button>
                         ))}
                     </Box>
+
+                    {/* Menü-Icon (nur auf mobilen Geräten sichtbar) */}
+                    <IconButton
+                        edge="start"
+                        color="inherit"
+                        aria-label="menu"
+                        onClick={toggleDrawer(true)}
+                        sx={{
+                            mr: 2,
+                            display: { xs: "block", sm: "none" },
+                            position: 'absolute', // Positioniert das Icon absolut im AppBar
+                            right: '20px', // Abstand vom rechten Rand
+                        }}
+                    >
+                        <MenuIcon />
+                    </IconButton>
                 </Toolbar>
             </AppBar>
 
-            {/* Seitliches Menü (Drawer) */}
-            <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer(false)}>
+            {/* Seitliches Menü (Drawer) rechts */}
+            <Drawer anchor="right" open={drawerOpen} onClose={toggleDrawer(false)}>
                 <Box
                     sx={{
                         width: 250,
@@ -141,6 +135,7 @@ const Header: React.FC = () => {
                             </ListItem>
                         ))}
                     </List>
+
                     <Divider sx={{ background: theme.palette.warning.main }} />
                 </Box>
             </Drawer>

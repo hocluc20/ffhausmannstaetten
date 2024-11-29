@@ -9,7 +9,8 @@ const Layout = () => {
         <div>
             <header style={{ position: 'sticky', top: 0, zIndex: 1000 }}><Header/></header>
 
-            <Box sx={{ marginTop: '80px', marginLeft: '40px', marginRight: '40px' }}>
+            {/*<Box sx={{ marginTop: '80px', marginLeft: '40px', marginRight: '40px' }}>*/}
+            <Box>
                 <Outlet/>
             </Box>
 
