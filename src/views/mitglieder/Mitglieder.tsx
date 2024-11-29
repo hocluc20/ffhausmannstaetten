@@ -65,7 +65,7 @@ const Mitglieder: React.FC = () => {
             elevation={1}
         >
             {Object.entries(groupedMembers).map(([group, groupMembers]) => (
-                <Box key={group} sx={{ mb: 8, width: '100%', marginRight:"250px", marginLeft:"250px", paddingLeft:"150px", paddingRight:"150px" }}>
+                <Box key={group} sx={{ mb: 8, width: '100%', marginRight:"250px", marginLeft:"250px", paddingLeft:"7%", paddingRight:"7%" }}>
                     <Typography
                         variant="h3"
                         sx={{
