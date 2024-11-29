@@ -6,9 +6,15 @@ import Layout from "./components/layout/Layout";
 import {ThemeProvider} from "@mui/material";
 import theme from "./theme";
 
+import {APIProvider, useAPI} from "./common/context/DataContext";
+import Home from "./common/views/Home";
+
 function App() {
+
+
     return (
         <>
+            <APIProvider>
             <ThemeProvider theme={theme}>
                 <BrowserRouter>
                     <Routes>
@@ -19,6 +25,7 @@ function App() {
                     </Routes>
                 </BrowserRouter>
             </ThemeProvider>
+            </APIProvider>
         </>
     );
 }
