@@ -73,9 +73,9 @@ const WelcomePopup: React.FC = () => {
                 {/*</Typography>*/}
                 <CardMedia
                     component="img"
-                    image={"/images/FFHausMitAutos.jpg"}
+                    image={"/images/Friedenslicht.png"}
                     sx={{
-                        height: 250,
+                        height: "100%",
                         objectFit: 'cover',
                         transition: 'transform 0.5s ease',
                     }}

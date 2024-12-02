@@ -86,7 +86,7 @@ const Mitglieder: React.FC = () => {
                             return (
                                 <Grid
                                     item
-                                    xs={6}  // 2 Spalten auf kleinen Bildschirmen
+                                    xs={12}  // 2 Spalten auf kleinen Bildschirmen
                                     sm={6}  // 2 Spalten auf mittleren Bildschirmen
                                     md={2.4}  // 5 Spalten auf größeren Bildschirmen
                                     key={member.id}
