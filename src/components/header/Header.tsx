@@ -16,6 +16,7 @@ import {
     Typography,
 } from "@mui/material";
 import { Menu as MenuIcon, Home, Info, Contacts, Build } from "@mui/icons-material";
+import FireTruckIcon from '@mui/icons-material/FireTruck';
 
 const Header: React.FC = () => {
     const [drawerOpen, setDrawerOpen] = useState(false);
@@ -33,6 +34,7 @@ const Header: React.FC = () => {
         { text: "Einsätze", icon: <Build />, link: "#" },
         { text: "Tätigkeiten", icon: <Build />, link: "#" },
         { text: "Kontakt & Impressum", icon: <Contacts />, link: "/impressum" },
+        { text: "Fahrzeuge", icon: <FireTruckIcon/>, link: "/fahrzeuge" },
     ];
 
     return (

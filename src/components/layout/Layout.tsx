@@ -7,15 +7,13 @@ import Header from "../header/Header";
 const Layout = () => {
     return (
         <div>
-            <header style={{ position: 'sticky', top: 0, zIndex: 1000 }}><Header/></header>
+            <header style={{position: 'sticky', top: 0, zIndex: 1000}}><Header/></header>
 
             {/*<Box sx={{ marginTop: '80px', marginLeft: '40px', marginRight: '40px' }}>*/}
-            <Box>
-                <Outlet/>
-            </Box>
 
+            <Outlet/>
 
-            <footer style={{marginTop:'80px'}}>
+            <footer style={{marginTop: '80px'}}>
                 <Footer/>
             </footer>
 
