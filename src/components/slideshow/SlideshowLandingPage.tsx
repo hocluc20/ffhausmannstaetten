@@ -21,12 +21,13 @@ const SlideshowLandingPage = () => {
             <Box
                 sx={{
                     height: '100vh',  // Höhe auf 100% der Viewport-Höhe setzen
-                    width: '99.1vw',   // Breite auf 100% der Viewport-Breite setzen
+                    width: '100%',
                     overflow: 'hidden', // Overflow ausblenden, um Scrollen zu verhindern
                     margin: 0,        // Kein Margin
                     padding: 0,       // Kein Padding
                     position: 'relative', // Positionierung relativ für Slider
-                    marginTop: "-80px"
+                    marginTop: "-80px",
+                    backgroundPosition:"cover"
                 }}
             >
                 <Slider {...settings}>

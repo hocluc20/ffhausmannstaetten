@@ -11,14 +11,43 @@ import WelcomePopup from "../../components/popups/WelcomePopup";
 import ProfileCard from "../../components/mitglieder/ProfileCard";
 
 
+interface MockDataItem {
+    text: string;
+    title: string;
+    imageUrl: string;
+    link: string;
+}
+
+// Mock data for the grids
+const mockDataPrimary: MockDataItem[] = [
+    {
+        text: "Verkehrsunfall",
+        title: "T03V",
+        imageUrl: "/images/FFHausMitAutos.jpg",
+        link: "impressum",
+    },
+    {
+        text: "Brandbekämpfung",
+        title: "B02B",
+        imageUrl: "/images/FFHausMitAutos.jpg",
+        link: "services",
+    },
+    {
+        text: "Technische Hilfe",
+        title: "T01T",
+        imageUrl: "/images/FFHausMitAutos.jpg",
+        link: "contact",
+    },
+];
+
 const Home: React.FC = () => {
     // TO-DO: Get immer die 3 aktuellsten Ereignisse
     return (
-        <Box sx={{width: "100%", maxWidth: "100%"}}>
+        <Box sx={{width: "100%", maxWidth: "100%", alignItems:"center"}}>
             <WelcomePopup/>
 
             <SlideshowLandingPage/>
-            <br/>
+            {/*<br/>*/}
 
             {/*<Box*/}
             {/*    sx={{*/}
@@ -36,17 +65,21 @@ const Home: React.FC = () => {
             {/*/>*/}
 
             {/*<HeaderWithBackground headerText={"Einsätze"}/>*/}
-            <Grid container spacing={4} sx={{
+            <Grid container spacing={5} sx={{
                 justifyContent: 'center',
-                width: '105%',
+                width: '100%',
                 paddingBottom: "2rem",
-                paddingTop: "2rem",
-                marginTop: "10rem",
+                paddingTop: "2vh",
+                marginTop: "10vh",
                 marginBottom: "10rem",
-                backgroundColor: "white"
+                backgroundColor: "white",
+                // alignItems:"center"
             }}>
+                <Grid item xs={12} sm={1.4} md={1.4}>
 
-                <Grid item xs={12} sm={3} md={3}>
+                </Grid>
+
+                <Grid item xs={12} sm={5} md={3}>
                     <ImageWithText
                         text="Verkehrsunfall"
                         title="T03V"
@@ -54,7 +87,7 @@ const Home: React.FC = () => {
                         link={"impressum"}
                     />
                 </Grid>
-                <Grid item xs={12} sm={3} md={3}>
+                <Grid item xs={12} sm={5} md={3}>
                     <ImageWithText
                         text="Verkehrsunfall"
                         title="T03V"
@@ -62,7 +95,7 @@ const Home: React.FC = () => {
                         link={"impressum"}
                     />
                 </Grid>
-                <Grid item xs={12} sm={3} md={3}>
+                <Grid item xs={12} sm={5} md={3}>
                     <ImageWithText
                         text="Verkehrsunfall"
                         title="T03V"
@@ -75,37 +108,36 @@ const Home: React.FC = () => {
                 </Grid>
             </Grid>
 
-            <Grid container spacing={4} sx={{justifyContent: 'center', width: '100%'}}>
-                <Grid item xs={12} sm={1.4} md={1.4}>
 
-                </Grid>
-                <Grid item xs={12} sm={3} md={3}>
-                    <ImageWithText
-                        text="Verkehrsunfall"
-                        title="T03V"
-                        imageUrl="/images/FFHausMitAutos.jpg"
-                        link={"impressum"}
-                    />
-                </Grid>
-                <Grid item xs={12} sm={3} md={3}>
-                    <ImageWithText
-                        text="Verkehrsunfall"
-                        title="T03V"
-                        imageUrl="/images/FFHausMitAutos.jpg"
-                        link={"impressum"}
-                    />
-                </Grid>
-                <Grid item xs={12} sm={3} md={3}>
-                    <ImageWithText
-                        text="Verkehrsunfall"
-                        title="T03V"
-                        imageUrl="/images/FFHausMitAutos.jpg"
-                        link={"impressum"}
-                    />
-                </Grid>
-                <Grid item xs={12} sm={1.4} md={1.4}>
 
-                </Grid>
+            <Grid
+                container
+                spacing={5}
+                sx={{
+                    justifyContent: 'center',
+                    width: '100%',
+                    paddingBottom: "2rem",
+                    paddingTop: "2rem",
+                    marginTop: { xs: "5rem", md: "10rem" },
+                    marginBottom: { xs: "5rem", md: "10rem" },
+                    backgroundColor: "white",
+                }}
+            >
+                <Grid item xs={false} sm={1.4} md={1.4}></Grid>
+
+                {mockDataPrimary.map((item, index) => (
+                    <Grid item xs={12} sm={6} md={3} key={index}>
+                        <ImageWithText
+                            text={item.text}
+                            title={item.title}
+                            imageUrl={item.imageUrl}
+                            link={item.link}
+                        />
+                    </Grid>
+                ))}
+
+                <Grid item xs={false} sm={1.4} md={1.4}></Grid>
+
             </Grid>
 
 
