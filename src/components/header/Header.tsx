@@ -60,7 +60,6 @@ const Header: React.FC = () => {
                         }}
                     />
 
-                    {/* Navigation Links (nur für größere Bildschirme sichtbar) */}
                     <Box
                         sx={{
                             display: { xs: "none", sm: "flex" },
@@ -74,13 +73,34 @@ const Header: React.FC = () => {
                             <Button
                                 key={item.text}
                                 color="inherit"
-                                sx={{ fontWeight: "bold" }}
+                                sx={{
+                                    fontWeight: "bold",
+                                    position: "relative",
+                                    overflow: "hidden",
+                                    "&::after": {
+                                        content: '""',
+                                        position: "absolute",
+                                        bottom: 0,
+                                        left: "0%",
+                                        width: "100%",
+                                        height: "2px",
+                                        backgroundColor: theme.palette.warning.main,
+                                        transform: "scaleX(0)",
+                                        transformOrigin: "bottom right",
+                                        transition: "transform 0.3s ease-out",
+                                    },
+                                    "&:hover::after": {
+                                        transform: "scaleX(1)",
+                                        transformOrigin: "bottom left",
+                                    },
+                                }}
                                 href={item.link}
                             >
                                 {item.text}
                             </Button>
                         ))}
                     </Box>
+
 
                     {/* Menü-Icon (nur auf mobilen Geräten sichtbar) */}
                     <IconButton
