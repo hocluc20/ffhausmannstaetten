@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import * as motion from 'motion/react-client';
 import './Fahrzeuge.css';
-import { AnimatePresence } from "motion/react";
+import {AnimatePresence} from "motion/react";
+import {Typography} from "@mui/material";
 
 const images = [
-    { src: '/images/nobg/mzfa_closed.png', info: 'mzfa' },
-    { src: '/images/nobg/tlfa_closed.png', info: 'tlfa' },
-    { src: '/images/nobg/tsa_closed.png', info: 'tsa' },
-    { src: '/images/nobg/krf_closed.png', info: 'krf' },
-    { src: '/images/nobg/mtf_closed.png', info: 'mtf' },
+    {src: '/images/nobg/mzfa_closed.png', info: 'mzfa'},
+    {src: '/images/nobg/tlfa_closed.png', info: 'tlfa'},
+    {src: '/images/nobg/tsa_closed.png', info: 'tsa'},
+    {src: '/images/nobg/krf_closed.png', info: 'krf'},
+    {src: '/images/nobg/mtf_closed.png', info: 'mtf'},
 ];
 
 const Fahrzeuge = () => {
@@ -47,16 +48,27 @@ const Fahrzeuge = () => {
                 <AnimatePresence mode="wait">
                     {images.map((image, index) => (
                         index === currentIndex && (
-                            <motion.img
-                                key={index}
-                                src={image.src}
-                                alt={`Slide ${index}`}
-                                initial={{ x: '-100vw', opacity: 0 }}
-                                animate={{ x: '0vw', opacity: 1 }}
-                                exit={{ x: '100vw', opacity: 0 }}
-                                transition={{ type: 'tween', duration: 0.4 }}
-                                className="carousel-image"
-                            />
+                            <motion.div key={index} className={"carousel-container"}>
+                                <motion.img
+                                    src={image.src}
+                                    alt={`Slide ${index}`}
+                                    initial={{x: '-100vw', opacity: 0}}
+                                    animate={{x: '0vw', opacity: 1}}
+                                    exit={{x: '100vw', opacity: 0}}
+                                    transition={{type: 'tween', duration: 0.4}}
+                                    className="carousel-image"
+                                />
+                                <motion.div initial={{x: '-100vw', opacity: 0}}
+                                            animate={{x: '0vw', opacity: 1}}
+                                            exit={{x: '100vw', opacity: 0}}
+                                            transition={{type: 'tween', duration: 0.4}}
+                                            className="carousel-text">
+                                    <Typography variant={"h3"}>
+                                        {image.info}
+                                    </Typography>
+                                </motion.div>
+
+                            </motion.div>
                         )
                     ))}
                 </AnimatePresence>
