@@ -2,14 +2,14 @@ import React, {useState, useEffect} from 'react';
 import * as motion from 'motion/react-client';
 import './Fahrzeuge.css';
 import {AnimatePresence} from "motion/react";
-import {Typography} from "@mui/material";
+import {List, ListItem, Typography} from "@mui/material";
 
 const images = [
-    {src: '/images/nobg/mzfa_closed.png', info: 'mzfa'},
-    {src: '/images/nobg/tlfa_closed.png', info: 'tlfa'},
-    {src: '/images/nobg/tsa_closed.png', info: 'tsa'},
-    {src: '/images/nobg/krf_closed.png', info: 'krf'},
-    {src: '/images/nobg/mtf_closed.png', info: 'mtf'},
+    {src: '/images/nobg/tlfa_closed.png', info: 'TLFA', description:'3000l Wasser;200l Schaum;400PS;2013 erbaut;5+1 Sitze'},
+    {src: '/images/nobg/krf_closed.png', info: 'KRFS-T', description:'3000l Wasser;200l Schaum;400PS;2013 erbaut;5+1 Sitze'},
+    {src: '/images/nobg/mzfa_closed.png', info: 'MZFA', description:'3000l Wasser;200l Schaum;400PS;2013 erbaut;5+1 Sitze'},
+    {src: '/images/nobg/mtf_closed.png', info: 'MTF', description:'3000l Wasser;200l Schaum;400PS;2013 erbaut;5+1 Sitze'},
+    {src: '/images/nobg/tsa_closed.png', info: 'TSA', description:'3000l Wasser;200l Schaum;400PS;2013 erbaut;5+1 Sitze'}
 ];
 
 const Fahrzeuge = () => {
@@ -63,9 +63,14 @@ const Fahrzeuge = () => {
                                             exit={{x: '100vw', opacity: 0}}
                                             transition={{type: 'tween', duration: 0.4}}
                                             className="carousel-text">
-                                    <Typography variant={"h3"}>
-                                        {image.info}
-                                    </Typography>
+                                    <Typography variant="h3">{image.info}</Typography>
+                                    <List>
+                                        {image.description.split(";").map((value, index) => (
+                                            <ListItem key={index}>
+                                                <Typography variant="h5">{value}</Typography>
+                                            </ListItem>
+                                        ))}
+                                    </List>
                                 </motion.div>
 
                             </motion.div>
