@@ -10,6 +10,7 @@ import { CardContent } from "@mui/material";
 import FireTruckIcon from '@mui/icons-material/FireTruck';
 import FireHydrantAltIcon from '@mui/icons-material/FireHydrantAlt';
 import PersonIcon from '@mui/icons-material/Person';
+import HeaderWithBackground from "../../components/header/HeaderWithBackground";
 
 
 interface MockDataItem {
@@ -73,9 +74,6 @@ const Home: React.FC = () => {
 
             <SlideshowLandingPage/>
 
-
-
-
             <Grid container justifyContent="center" alignItems="center" spacing={4} sx={{ py: 5 }}>
                 {stats.map((stat, index) => (
                     <Grid item key={index}>
@@ -101,30 +99,12 @@ const Home: React.FC = () => {
                                 </Typography>
                             </Box>
                         </CardContent>
-
                         </Card>
                     </Grid>
                 ))}
             </Grid>
 
-            <Box
-                sx={{
-                    backgroundImage: "url(https://picsum.photos/1080/750)",
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
-                    backgroundRepeat: "no-repeat",
-                    backgroundAttachment: "fixed", // keeps the image fixed on scroll
-                    height: "15rem",
-                    width: "100%",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                }}
-            >
-                <Typography variant="h3" sx={{color: "white"}}>
-                    Einsatz
-                </Typography>
-            </Box>
+            <HeaderWithBackground headerText={"Neuigkeiten"} headerSize={"h1"} imageName={"sam_3937.jpg"}/>
 
             <Grid
                 container
@@ -153,24 +133,6 @@ const Home: React.FC = () => {
                 <Grid item xs={false} sm={1.4} md={1.4}></Grid>
             </Grid>
 
-            <Box
-                sx={{
-                    backgroundImage: "url(https://picsum.photos/1080/750)",
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
-                    backgroundRepeat: "no-repeat",
-                    backgroundAttachment: "fixed", // keeps the image fixed on scroll
-                    height: "15rem",
-                    width: "100%",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                }}
-            >
-                <Typography variant="h3" sx={{color: "white"}}>
-                    Einsatz
-                </Typography>
-            </Box>
 
             <Grid
                 container
@@ -185,7 +147,6 @@ const Home: React.FC = () => {
                 }}
             >
                 <Grid item xs={false} sm={1.4} md={1.4}></Grid>
-
                 {mockDataPrimary.slice(3, 6).map((item, index) => (
                     <Grid item xs={12} sm={6} md={3} key={index + 3}>
                         <ImageWithText
@@ -196,12 +157,10 @@ const Home: React.FC = () => {
                         />
                     </Grid>
                 ))}
-
                 <Grid item xs={false} sm={1.4} md={1.4}></Grid>
             </Grid>
         </Box>
     );
-
 };
 
 export default Home;

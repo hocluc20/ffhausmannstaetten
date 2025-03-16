@@ -165,7 +165,7 @@ const Footer: React.FC = () => {
                     }}
                 >
                     <Typography variant="body2">
-                        &copy; 2024 Freiwillige Feuerwehr Hausmannstätten. Alle Rechte
+                        &copy; {new Date().getFullYear()} Freiwillige Feuerwehr Hausmannstätten. Alle Rechte
                         vorbehalten.
                     </Typography>
                 </Box>

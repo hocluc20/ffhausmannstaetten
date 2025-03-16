@@ -17,62 +17,61 @@ const settings = {
 
 const SlideshowLandingPage = () => {
     return (
-        <>
-            <Box
-                sx={{
-                    height: '100vh',  // Höhe auf 100% der Viewport-Höhe setzen
-                    width: '100%',
-                    overflow: 'hidden', // Overflow ausblenden, um Scrollen zu verhindern
-                    margin: 0,        // Kein Margin
-                    padding: 0,       // Kein Padding
-                    position: 'relative', // Positionierung relativ für Slider
-                    marginTop: "-80px",
-                    backgroundPosition:"cover",
-                }}
-            >
-                <Slider {...settings}>
-                    {/* Bild 1 */}
-                    <Box
-                        component="img"
-                        src="/images/FFHausMitAutos.jpg" // Bild aus dem public-Ordner
-                        alt="Bild 1"
-                        sx={{
-                            width: '100%',   // Breite auf 100% setzen
-                            height: '100%',  // Höhe auf 100% setzen, damit das Bild den gesamten Container ausfüllt
-                            objectFit: 'cover', // Bild so skalieren, dass es den Container ausfüllt
-                            margin: 0,       // Kein Margin
-                            padding: 0,      // Kein Padding
-                        }}
-                    />
-                    {/* Bild 2 */}
-                    <Box
-                        component="img"
-                        src="/images/FFHausSeitlich.jpg"
-                        alt="Bild 2"
-                        sx={{
-                            width: '100%',   // Breite auf 100% setzen
-                            height: '100%',  // Höhe auf 100% setzen
-                            objectFit: 'cover', // Bild so skalieren, dass es den Container ausfüllt
-                            margin: 0,       // Kein Margin
-                            padding: 0,      // Kein Padding
-                        }}
-                    />
-                    {/* Bild 3 */}
-                    <Box
-                        component="img"
-                        src="/images/FFHausVorne.jpg"
-                        alt="Bild 3"
-                        sx={{
-                            width: '100%',   // Breite auf 100% setzen
-                            height: '100%',  // Höhe auf 100% setzen
-                            objectFit: 'cover', // Bild so skalieren, dass es den Container ausfüllt
-                            margin: 0,       // Kein Margin
-                            padding: 0,      // Kein Padding
-                        }}
-                    />
-                </Slider>
-            </Box>
-        </>
+        <Box
+            sx={{
+                height: '100vh',  // Höhe auf 100% der Viewport-Höhe setzen
+                width: '100%',
+                overflow: 'hidden', // Overflow ausblenden, um Scrollen zu verhindern
+                margin: 0,        // Kein Margin
+                padding: 0,       // Kein Padding
+                position: 'relative', // Positionierung relativ für Slider
+                marginTop: "-80px",
+                backgroundPosition: "cover",
+                // clipPath: 'polygon(0 0, 100% 0%, 100% 100%, 50% 100%, 0 100%)', // Das Dreieck geht nach unten
+            }}
+        >
+            <Slider {...settings}>
+                {/* Bild 1 */}
+                <Box
+                    component="img"
+                    src="/images/FFHausMitAutos.jpg" // Bild aus dem public-Ordner
+                    alt="Bild 1"
+                    sx={{
+                        width: '100%',   // Breite auf 100% setzen
+                        height: '100%',  // Höhe auf 100% setzen, damit das Bild den gesamten Container ausfüllt
+                        objectFit: 'cover', // Bild so skalieren, dass es den Container ausfüllt
+                        margin: 0,       // Kein Margin
+                        padding: 0,      // Kein Padding
+                    }}
+                />
+                {/* Bild 2 */}
+                <Box
+                    component="img"
+                    src="/images/FFHausSeitlich.jpg"
+                    alt="Bild 2"
+                    sx={{
+                        width: '100%',   // Breite auf 100% setzen
+                        height: '100%',  // Höhe auf 100% setzen
+                        objectFit: 'cover', // Bild so skalieren, dass es den Container ausfüllt
+                        margin: 0,       // Kein Margin
+                        padding: 0,      // Kein Padding
+                    }}
+                />
+                {/* Bild 3 */}
+                <Box
+                    component="img"
+                    src="/images/FFHausVorne.jpg"
+                    alt="Bild 3"
+                    sx={{
+                        width: '100%',   // Breite auf 100% setzen
+                        height: '100%',  // Höhe auf 100% setzen
+                        objectFit: 'cover', // Bild so skalieren, dass es den Container ausfüllt
+                        margin: 0,       // Kein Margin
+                        padding: 0,      // Kein Padding
+                    }}
+                />
+            </Slider>
+        </Box>
     );
 };
 
