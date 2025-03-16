@@ -1,17 +1,15 @@
 import React, {useEffect, useState} from 'react';
 import {Box, Card, Container, Grid, Typography} from '@mui/material';
-import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import SlideshowLandingPage from "../../components/slideshow/SlideshowLandingPage";
-import {ParallaxBanner, ParallaxProvider} from "react-scroll-parallax";
-import HeaderWithBackground from "../../components/header/HeaderWithBackground";
 import ImageWithText from "../../components/image/ImageWithText";
 import WelcomePopup from "../../components/popups/WelcomePopup";
-import ProfileCard from "../../components/mitglieder/ProfileCard";
 import CountUp from "react-countup";
 import { CardContent } from "@mui/material";
-import { Bell, Users, Truck } from "lucide-react";
+import FireTruckIcon from '@mui/icons-material/FireTruck';
+import FireHydrantAltIcon from '@mui/icons-material/FireHydrantAlt';
+import PersonIcon from '@mui/icons-material/Person';
 
 
 interface MockDataItem {
@@ -62,9 +60,9 @@ const mockDataPrimary: MockDataItem[] = [
 ];
 
 const stats = [
-    { icon: <Bell size={60} color="#b32b2b" />, value: mockDataPrimary.length, label: "Einsätze" },
-    { icon: <Users size={60} color="#b32b2b" />, value: 104, label: "Mitglieder" },
-    { icon: <Truck size={60} color="#b32b2b" />, value: 4, label: "Fahrzeuge" },
+    { icon: <FireHydrantAltIcon/>, value: mockDataPrimary.length, label: "Einsätze" },
+    { icon: <PersonIcon/>, value: 104, label: "Mitglieder" },
+    { icon: <FireTruckIcon/>, value: 4, label: "Fahrzeuge" },
 ];
 
 const Home: React.FC = () => {
@@ -74,6 +72,8 @@ const Home: React.FC = () => {
             <WelcomePopup/>
 
             <SlideshowLandingPage/>
+
+
 
 
             <Grid container justifyContent="center" alignItems="center" spacing={4} sx={{ py: 5 }}>
@@ -107,7 +107,24 @@ const Home: React.FC = () => {
                 ))}
             </Grid>
 
-
+            <Box
+                sx={{
+                    backgroundImage: "url(https://picsum.photos/1080/750)",
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                    backgroundRepeat: "no-repeat",
+                    backgroundAttachment: "fixed", // keeps the image fixed on scroll
+                    height: "15rem",
+                    width: "100%",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                }}
+            >
+                <Typography variant="h3" sx={{color: "white"}}>
+                    Einsatz
+                </Typography>
+            </Box>
 
             <Grid
                 container
@@ -135,6 +152,25 @@ const Home: React.FC = () => {
                 ))}
                 <Grid item xs={false} sm={1.4} md={1.4}></Grid>
             </Grid>
+
+            <Box
+                sx={{
+                    backgroundImage: "url(https://picsum.photos/1080/750)",
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                    backgroundRepeat: "no-repeat",
+                    backgroundAttachment: "fixed", // keeps the image fixed on scroll
+                    height: "15rem",
+                    width: "100%",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                }}
+            >
+                <Typography variant="h3" sx={{color: "white"}}>
+                    Einsatz
+                </Typography>
+            </Box>
 
             <Grid
                 container

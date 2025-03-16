@@ -27,7 +27,7 @@ const SlideshowLandingPage = () => {
                     padding: 0,       // Kein Padding
                     position: 'relative', // Positionierung relativ für Slider
                     marginTop: "-80px",
-                    backgroundPosition:"cover"
+                    backgroundPosition:"cover",
                 }}
             >
                 <Slider {...settings}>

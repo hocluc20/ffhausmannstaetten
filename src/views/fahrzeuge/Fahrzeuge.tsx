@@ -1,14 +1,14 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import * as motion from 'motion/react-client';
 import './Fahrzeuge.css';
-import { AnimatePresence } from "motion/react"
+import { AnimatePresence } from "motion/react";
 
 const images = [
-    {src: '/images/nobg/mzfa_closed.png', info: 'mzfa'},
-    {src: '/images/nobg/tlfa_closed.png', info: 'tlfa'},
-    {src: '/images/nobg/tsa_closed.png', info: 'tsa'},
-    {src: '/images/nobg/krf_closed.png', info: 'krf'},
-    {src: '/images/nobg/mtf_closed.png', info: 'mtf'},
+    { src: '/images/nobg/mzfa_closed.png', info: 'mzfa' },
+    { src: '/images/nobg/tlfa_closed.png', info: 'tlfa' },
+    { src: '/images/nobg/tsa_closed.png', info: 'tsa' },
+    { src: '/images/nobg/krf_closed.png', info: 'krf' },
+    { src: '/images/nobg/mtf_closed.png', info: 'mtf' },
 ];
 
 const Fahrzeuge = () => {
@@ -26,6 +26,13 @@ const Fahrzeuge = () => {
     };
 
     useEffect(() => {
+        // Preload all images
+        images.forEach((image) => {
+            const img = new Image();
+            img.src = image.src;
+        });
+
+        // Attach scroll listener
         window.addEventListener('scroll', handleScroll);
         return () => {
             window.removeEventListener('scroll', handleScroll);
@@ -44,10 +51,10 @@ const Fahrzeuge = () => {
                                 key={index}
                                 src={image.src}
                                 alt={`Slide ${index}`}
-                                initial={{x: '-100vw', opacity: 0}}
-                                animate={{x: '0vw', opacity: 1}}
-                                exit={{x: '100vw', opacity: 0}}
-                                transition={{type: 'tween', duration: 0.8}}
+                                initial={{ x: '-100vw', opacity: 0 }}
+                                animate={{ x: '0vw', opacity: 1 }}
+                                exit={{ x: '100vw', opacity: 0 }}
+                                transition={{ type: 'tween', duration: 0.4 }}
                                 className="carousel-image"
                             />
                         )
