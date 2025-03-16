@@ -51,7 +51,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ name, rank, function: userFun
             <CardContent>
                 <HoverableImage>
                     <Image src={imageUrl} alt={name} />
-                    <HoverOverlay className="hoverOverlay">{userFunction}</HoverOverlay>
+                    <HoverOverlay className="hoverOverlay" sx={{color:"#ffffff", fontFamily:"sans-serif", backgroundColor:'rgba(0, 0, 0, 0.35)'}}>{userFunction}</HoverOverlay>
                 </HoverableImage>
                 <Box mt={2}>
                     <Typography variant="h6" component="div" color={"#000000"}>

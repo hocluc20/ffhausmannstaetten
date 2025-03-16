@@ -1,59 +1,41 @@
 import React from 'react';
-import {Box, Typography, Grid, Divider, Paper, useTheme} from '@mui/material';
+import {Box, Typography, Grid, Divider, Paper} from '@mui/material';
 import ProfileCard from '../../components/mitglieder/ProfileCard';
+import HeaderWithBackground from "../../components/header/HeaderWithBackground";
 
 const groupedMembers = {
     Kommando: [
-        { id: 1, name: 'Max Mustermann', rank: 'Hauptbrandmeister', function: 'Kommandant' },
-        { id: 2, name: 'Anna Müller', rank: 'Oberbrandmeisterin', function: 'Stv. Kommandantin' },
+        { id: 1, name: 'HBI Thomas Molidor', rank: 'Hauptbrandinspektor', function: 'Kommandant' },
+        { id: 2, name: 'OBI Johannes Lafer', rank: 'Oberbrandinspektor', function: 'Stv. Kommandant' },
     ],
     Zugskommandanten: [
-        { id: 3, name: 'Lukas Weber', rank: 'Zugskommandant', function: 'Zug 1' },
-        { id: 4, name: 'Petra Schmidt', rank: 'Zugskommandantin', function: 'Zug 2' },
-        { id: 5, name: 'Johann Meier', rank: 'Zugskommandant', function: 'Zug 3' },
+        { id: 3, name: 'BI Robert Zaunschirm', rank: 'Zugskommandant', function: 'Übungsbeauftragter' },
+        { id: 4, name: 'HBI a.D. Robert Molidor', rank: 'Zugskommandant', function: 'Katastrophenschutz- \nbeauftragter' },
+        { id: 5, name: 'BM Gernot Lukas', rank: 'Zugskommandant', function: 'Kraftfahrerbeauftragter' },
     ],
     Gruppenkommandanten: [
-        { id: 6, name: 'Sophia Klein', rank: 'Gruppenkommandantin', function: 'Gruppe 1' },
-        { id: 7, name: 'Paul Neumann', rank: 'Gruppenkommandant', function: 'Gruppe 2' },
-        { id: 8, name: 'Clara Fischer', rank: 'Gruppenkommandantin', function: 'Gruppe 3' },
-        { id: 8, name: 'Clara Fischer', rank: 'Gruppenkommandantin', function: 'Gruppe 3' },
-        { id: 8, name: 'Clara Fischer', rank: 'Gruppenkommandantin', function: 'Gruppe 3' },
-        { id: 8, name: 'Clara Fischer', rank: 'Gruppenkommandantin', function: 'Gruppe 3' },
-        { id: 8, name: 'Clara Fischer', rank: 'Gruppenkommandantin', function: 'Gruppe 3' },
-        { id: 8, name: 'Clara Fischer', rank: 'Gruppenkommandantin', function: 'Gruppe 3' },
+        { id: 6, name: 'OBI a.D. Thomas Maier-Pongratz', rank: 'Gruppenkommandant', function: 'ÖFAST-Beauftragter' },
+        { id: 7, name: 'HLM Roland Helm', rank: 'Gruppenkommandant', function: 'MRAS-Beauftragter' },
+        { id: 8, name: 'HLM Robert Matzer', rank: 'Gruppenkommandant', function: '' },
+        { id: 9, name: 'OLM Martin Pechmann', rank: 'Gruppenkommandant', function: 'Geräte- und Maschinenmeister' },
+        { id: 10, name: 'LM Lukas Barrett', rank: 'Gruppenkommandant', function: 'Geräte- und Maschinenmeister' },
+        { id: 11, name: 'LM Thomas Lechner', rank: 'Gruppenkommandant, Kassier', function: 'Kassier' },
     ],
-    Verwaltung: [
-        { id: 14, name: 'Emma Kaiser', rank: 'Sachbearbeiterin', function: 'Verwaltung' },
-        { id: 15, name: 'Jonas Koch', rank: 'Sachbearbeiter', function: 'Verwaltung' },
-    ],
-    Mannschaft: [
-        { id: 16, name: 'Felix Richter', rank: 'Feuerwehrmann', function: 'Einsatzkraft' },
-        { id: 17, name: 'Mia Beck', rank: 'Feuerwehrfrau', function: 'Einsatzkraft' },
-        { id: 18, name: 'Lara Bauer', rank: 'Feuerwehrfrau', function: 'Einsatzkraft' },
-        { id: 18, name: 'Lara Bauer', rank: 'Feuerwehrfrau', function: 'Einsatzkraft' },
-        { id: 18, name: 'Lara Bauer', rank: 'Feuerwehrfrau', function: 'Einsatzkraft' },
-        { id: 18, name: 'Lara Bauer', rank: 'Feuerwehrfrau', function: 'Einsatzkraft' },
-        { id: 18, name: 'Lara Bauer', rank: 'Feuerwehrfrau', function: 'Einsatzkraft' },
-        { id: 18, name: 'Lara Bauer', rank: 'Feuerwehrfrau', function: 'Einsatzkraft' },
-        { id: 18, name: 'Lara Bauer', rank: 'Feuerwehrfrau', function: 'Einsatzkraft' },
-        { id: 18, name: 'Lara Bauer', rank: 'Feuerwehrfrau', function: 'Einsatzkraft' },
-        { id: 18, name: 'Lara Bauer', rank: 'Feuerwehrfrau', function: 'Einsatzkraft' },
-        { id: 18, name: 'Lara Bauer', rank: 'Feuerwehrfrau', function: 'Einsatzkraft' },
-        { id: 18, name: 'Lara Bauer', rank: 'Feuerwehrfrau', function: 'Einsatzkraft' },
-        { id: 18, name: 'Lara Bauer', rank: 'Feuerwehrfrau', function: 'Einsatzkraft' },
-        { id: 18, name: 'Lara Bauer', rank: 'Feuerwehrfrau', function: 'Einsatzkraft' },
-        { id: 18, name: 'Lara Bauer', rank: 'Feuerwehrfrau', function: 'Einsatzkraft' },
-        { id: 18, name: 'Lara Bauer', rank: 'Feuerwehrfrau', function: 'Einsatzkraft' },
-    ],
+    Beauftragte: [
+        { id: 12, name: 'LM d.V. Christoph Winkler', rank: 'Verwaltungsbeauftragter', function: 'Schriftführer' },
+        { id: 13, name: 'LM d.V. Lukas Hochfellner', rank: 'Verwaltungsbeauftragter', function: 'EDV-Beauftragter' },
+        { id: 14, name: 'LM d.F. Fabian Pußwald', rank: 'Fachdienstbeauftragter', function: 'Funkbeauftragter' },
+        { id: 15, name: 'OLM d.F. Daniel Laipold', rank: 'Fachdienstbeauftragter', function: 'Küchenbeauftragter' },
+        { id: 16, name: 'OLM d.F. Clemens Lafer', rank: 'Fachdienstbeauftragter', function: 'Hydrantenbeauftragter' },
+        { id: 17, name: 'LM d.S. Matthias Gfall', rank: 'Sanitätsbeauftragter', function: 'Sanitätsbeauftragter' },
+    ]
 };
 
 const Mitglieder: React.FC = () => {
-    const theme = useTheme();
     return (
-        <Paper
+        <Box
             sx={{
-                backgroundColor: '#f9f9f9',
-                padding: '2rem',
+                padding: '',
                 borderRadius: 2,
                 textAlign: 'center',
                 minHeight: '100vh',
@@ -62,45 +44,41 @@ const Mitglieder: React.FC = () => {
                 alignItems: 'center',
                 justifyContent: 'center',
             }}
-            elevation={1}
         >
             {Object.entries(groupedMembers).map(([group, groupMembers]) => (
-                <Box key={group} sx={{ mb: 8, width: '100%', marginRight:"250px", marginLeft:"250px", paddingLeft:"7%", paddingRight:"7%" }}>
-                    <Typography
-                        variant="h3"
-                        sx={{
-                            fontWeight: 600,
-                            color: theme.palette.primary.main,
-                            marginBottom: '1.5rem',
-                            textAlign: 'center',
-                        }}
-                    >
-                        {group}
-                    </Typography>
+                <>
+                    {group === "Kommando" ?
+                        <HeaderWithBackground headerText={group} headerSize={"h1"} imageName={"sam_3937.jpg"}/>
+                        :
+                        <HeaderWithBackground headerText={group} headerSize={"h1"} imageName={"sam_3937.jpg"}/>
+                    }
 
-                    <Grid container spacing={2} justifyContent="center" sx={{ width: '100%', px: 2 }}>
+
+                    <Grid container spacing={2} justifyContent="center" sx={{ width: '100%', px: 2, marginTop: "4vh", marginLeft: "15vh", marginRight:"15vh" }}>
                         {groupMembers.map((member, index) => {
-                            // Berechnen, in welcher Spalte das Mitglied platziert werden soll
-                            let gridColumn = (index % 4) + 1; // Spalten 1 bis 4 (4 Mitglieder werden verteilt)
+                            let gridColumn = (index % 4) + 1;
 
                             return (
                                 <Grid
                                     item
-                                    xs={12}  // 2 Spalten auf kleinen Bildschirmen
-                                    sm={6}  // 2 Spalten auf mittleren Bildschirmen
-                                    md={2.4}  // 5 Spalten auf größeren Bildschirmen
+                                    xs={12}
+                                    sm={6}
+                                    md={3}
                                     key={member.id}
                                     sx={{
                                         display: 'flex',
                                         justifyContent: 'center',
-                                        gridColumn: `span ${gridColumn}` // Anpassung für 4 Spalten
+                                        gridColumn: `span ${gridColumn}`,
+                                        marginRight: "0.5vh",
+                                        marginLeft: "0.5vh",
+                                        marginBottom: "2vh"
                                     }}
                                 >
                                     <ProfileCard
                                         name={member.name}
                                         rank={member.rank}
                                         function={member.function}
-                                        imageUrl="/images/feuerwehrMannPlatzhalterKompremiertAuf300px.png"
+                                        imageUrl="/images/IMG_9432.JPG"
                                     />
                                 </Grid>
                             );
@@ -108,9 +86,9 @@ const Mitglieder: React.FC = () => {
                     </Grid>
 
                     <Divider sx={{ marginTop: '3rem', borderColor: 'rgba(0,0,0,0.1)' }} />
-                </Box>
+                </>
             ))}
-        </Paper>
+        </Box>
 
     );
 };
