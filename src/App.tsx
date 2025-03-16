@@ -11,6 +11,7 @@ import CookiePopup from "./components/popups/CookiePopup";
 import Home from "./views/landingpage/Home";
 import Mitglieder from "./views/mitglieder/Mitglieder";
 import Fahrzeuge from "./views/fahrzeuge/Fahrzeuge";
+import Taetigkeiten from "./views/taetigkeiten/Taetigkeiten";
 
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
                                   <Route path="/impressum" element={<Impressum/>}/>
                                   <Route path="/mannschaft" element={<Mitglieder/>}/>
                                   <Route path="/fahrzeuge" element={<Fahrzeuge/>}/>
+                                  <Route path="/einsaetzeUndTaetigkeiten" element={<Taetigkeiten/>}/>
                             </Route>
                         </Routes>
                     </BrowserRouter>

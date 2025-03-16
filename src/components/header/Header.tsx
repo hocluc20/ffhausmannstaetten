@@ -31,8 +31,8 @@ const Header: React.FC = () => {
     const menuItems = [
         { text: "Home", icon: <Home />, link: "/" },
         { text: "Mitglieder", icon: <Info />, link: "/mannschaft" },
-        { text: "Einsätze", icon: <Build />, link: "#" },
-        { text: "Tätigkeiten", icon: <Build />, link: "#" },
+        { text: "Einsätze & Tätigkeiten", icon: <Build />, link: "/einsaetzeUndTaetigkeiten" },
+        // { text: "Tätigkeiten", icon: <Build />, link: "#" },
         { text: "Kontakt & Impressum", icon: <Contacts />, link: "/impressum" },
         { text: "Fahrzeuge", icon: <FireTruckIcon/>, link: "/fahrzeuge" },
     ];
