@@ -60,9 +60,9 @@ const mockDataPrimary: MockDataItem[] = [
 ];
 
 const stats = [
-    { icon: <FireHydrantAltIcon/>, value: mockDataPrimary.length, label: "Einsätze" },
-    { icon: <PersonIcon/>, value: 104, label: "Mitglieder" },
-    { icon: <FireTruckIcon/>, value: 4, label: "Fahrzeuge" },
+    { icon: <FireHydrantAltIcon sx={{fontSize:"5rem"}}/>, value: mockDataPrimary.length, label: "Einsätze" },
+    { icon: <PersonIcon sx={{fontSize:"5rem"}}/>, value: 104, label: "Mitglieder" },
+    { icon: <FireTruckIcon sx={{fontSize:"5rem"}}/>, value: 4, label: "Fahrzeuge" },
 ];
 
 const Home: React.FC = () => {
@@ -89,7 +89,7 @@ const Home: React.FC = () => {
                             }}
                         >
                             <CardContent sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                            <Box>
+                            <Box sx={{color:"#B32B2B"}}>
                                 {stat.icon}
                             </Box>
                             <Box>
