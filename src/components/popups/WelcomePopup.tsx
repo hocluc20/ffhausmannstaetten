@@ -4,7 +4,6 @@ import {
     DialogContent,
     DialogTitle,
     IconButton,
-    Typography,
     Box, useTheme, CardMedia,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
@@ -14,10 +13,14 @@ const WelcomePopup: React.FC = () => {
     const theme = useTheme();
 
     useEffect(() => {
-        setOpen(true);
+        const isPopupClosed = localStorage.getItem("popupClosed");
+        if (!isPopupClosed) {
+            setOpen(true);
+        }
     }, []);
 
     const handleClose = () => {
+        localStorage.setItem("popupClosed", "true");
         setOpen(false);
     };
 
@@ -32,19 +35,12 @@ const WelcomePopup: React.FC = () => {
                     background: "#ffffff",
                     boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.2)",
                     height: "85%",
-                    width: "50%"
+                    width: "50%",
                 },
             }}
         >
             <DialogTitle>
                 <Box display="flex" justifyContent="space-between" alignItems="center">
-                    {/*<Typography*/}
-                    {/*    variant="h6"*/}
-                    {/*    component="span"*/}
-                    {/*    sx={{ fontWeight: "bold", color: `${theme.palette.primary.main}` }}*/}
-                    {/*>*/}
-                    {/*    Willkommen!*/}
-                    {/*</Typography>*/}
                     <IconButton
                         onClick={handleClose}
                         sx={{
@@ -60,24 +56,13 @@ const WelcomePopup: React.FC = () => {
                 </Box>
             </DialogTitle>
             <DialogContent>
-                {/*<Typography*/}
-                {/*    variant="body1"*/}
-                {/*    sx={{*/}
-                {/*        color: "#000000",*/}
-                {/*        textAlign: "center",*/}
-                {/*        fontSize: "1.1rem",*/}
-                {/*    }}*/}
-                {/*>*/}
-                {/*    Schön, dass Sie hier sind! Entdecken Sie die neuen Funktionen und*/}
-                {/*    lassen Sie sich inspirieren.*/}
-                {/*</Typography>*/}
                 <CardMedia
                     component="img"
                     image={"/images/Friedenslicht.png"}
                     sx={{
                         height: "100%",
-                        objectFit: 'cover',
-                        transition: 'transform 0.5s ease',
+                        objectFit: "cover",
+                        transition: "transform 0.5s ease",
                     }}
                     className="image"
                 />
