@@ -35,7 +35,28 @@
     opacity: 0;
     transition: opacity 0.5s ease-in-out;
     will-change: transform, opacity;
+}
 
+.carousel-text {
+    position: absolute;
+    max-width: 70%;
+    max-height: 70%;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+    will-change: transform, opacity;
+    margin-left: 70%;
+    height: 40vh;
+    width: 15%;
+    background-color: rgba(255,255,255,0.5);
+    border-radius: 10px;
+    margin-bottom: 5rem;
+    text-align: center;
+}
+
+.carousel-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 
