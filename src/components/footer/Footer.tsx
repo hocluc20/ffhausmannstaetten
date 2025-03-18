@@ -16,12 +16,28 @@ const Footer: React.FC = () => {
         <Box
             component="footer"
             sx={{
+                position: "relative",
                 background: `linear-gradient(135deg, #b32b2b, #000000)`,
                 color: "white",
+                height: {
+                    lg: "30rem",
+                    md: "30rem",
+                    xs: "45rem"
+                },
                 py: 4,
+                clipPath: {
+                    xs: "none",
+                    md: "polygon(35% 10%, 250% 100%, -70% 100%)",
+                },
+                boxShadow: "-webkit-box-shadow: 0px 0px 14px 3px rgba(0,0,0,0.74);-moz-box-shadow: 0px 0px 14px 3px rgba(0,0,0,0.74);box-shadow: 0px 0px 14px 3px rgba(0,0,0,0.74);"
             }}
         >
-            <Container maxWidth="lg">
+            <Container maxWidth="lg" sx={{
+                marginTop: {
+                    md: "10rem",
+                    lg: "10rem"
+                }
+            }}>
                 {/* Footer Sections */}
                 <Grid container spacing={4} justifyContent="space-between">
                     {/* Section: Kontaktdaten */}

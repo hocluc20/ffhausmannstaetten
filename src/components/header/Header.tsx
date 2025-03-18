@@ -31,8 +31,7 @@ const Header: React.FC = () => {
     const menuItems = [
         { text: "Home", icon: <Home />, link: "/" },
         { text: "Mitglieder", icon: <Info />, link: "/mannschaft" },
-        { text: "Einsätze & Tätigkeiten", icon: <Build />, link: "/einsaetzeUndTaetigkeiten" },
-        // { text: "Tätigkeiten", icon: <Build />, link: "#" },
+        { text: "Tätigkeiten", icon: <Build />, link: "/einsaetzeUndTaetigkeiten" },
         { text: "Kontakt & Impressum", icon: <Contacts />, link: "/impressum" },
         { text: "Fahrzeuge", icon: <FireTruckIcon/>, link: "/fahrzeuge" },
     ];
@@ -44,21 +43,22 @@ const Header: React.FC = () => {
                 position="static"
                 sx={{
                     background: `linear-gradient(135deg, ${theme.palette.error.dark}, ${theme.palette.error.main})`,
+                    clipPath: {
+                        lg: "polygon(86% 76%, 140% -17%, -3332% -855%)",
+                        md: "polygon(86% 76%, 140% -17%, -3332% -855%)",
+                    },
+                    height: {
+                        lg: "15rem",
+                        md: "15rem",
+                    },
+                    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',  // Stronger shadow
                 }}
             >
                 <Toolbar sx={{ display: 'flex', alignItems: 'center' }}>
-                    {/* Titel / Logo */}
-                    <img
-                        src="/LogoLaptop.png"
-                        alt="Freiwillige Feuerwehr Hausmannstätten"
-                        style={{
-                            height: '80px',
-                            width: 'auto',
-                            borderBottom: `3px solid ${theme.palette.warning.main}`,
-                            paddingBottom: '0.5rem',
-                            marginRight: 'auto',
-                        }}
-                    />
+
+                    <Box component="img" src="/01_logo_white.svg" alt="Freiwillige Feuerwehr Hausmannstätten" sx={{height: '7rem',
+                        width: 'auto', borderBottom: `3px solid ${theme.palette.warning.main}`, paddingBottom: '0.5rem', marginRight: 'auto'}} />
+
 
                     <Box
                         sx={{
@@ -77,6 +77,7 @@ const Header: React.FC = () => {
                                     fontWeight: "bold",
                                     position: "relative",
                                     overflow: "hidden",
+                                    fontSize: "1.15rem",
                                     "&::after": {
                                         content: '""',
                                         position: "absolute",
@@ -102,7 +103,6 @@ const Header: React.FC = () => {
                     </Box>
 
 
-                    {/* Menü-Icon (nur auf mobilen Geräten sichtbar) */}
                     <IconButton
                         edge="start"
                         color="inherit"
@@ -120,7 +120,6 @@ const Header: React.FC = () => {
                 </Toolbar>
             </AppBar>
 
-            {/* Seitliches Menü (Drawer) rechts */}
             <Drawer anchor="right" open={drawerOpen} onClose={toggleDrawer(false)}>
                 <Box
                     sx={{
@@ -133,7 +132,6 @@ const Header: React.FC = () => {
                     onClick={toggleDrawer(false)}
                     onKeyDown={toggleDrawer(false)}
                 >
-                    {/* Überschrift im Drawer */}
                     <Typography
                         variant="h6"
                         sx={{

@@ -25,9 +25,12 @@ const SlideshowLandingPage = () => {
                 margin: 0,        // Kein Margin
                 padding: 0,       // Kein Padding
                 position: 'relative', // Positionierung relativ für Slider
-                marginTop: "-80px",
+                marginTop: {
+                    lg: "-15rem",
+                    xs: "-1rem",
+                    md: "-10rem"},
                 backgroundPosition: "cover",
-                // clipPath: 'polygon(0 0, 100% 0%, 100% 100%, 50% 100%, 0 100%)', // Das Dreieck geht nach unten
+                // boxShadow: "-webkit-box-shadow: 0px 0px 14px 3px rgba(0,0,0,0.74);-moz-box-shadow: 0px 0px 14px 3px rgba(0,0,0,0.74);box-shadow: 0px 0px 14px 3px rgba(0,0,0,0.74);"
             }}
         >
             <Slider {...settings}>

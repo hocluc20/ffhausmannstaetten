@@ -16,9 +16,11 @@ const HeaderWithBackground: React.FC<{ headerText: string, headerSize: string, i
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
+                // clipPath: "polygon(35% 10%, 250% 100%, -70% 100%)",
+                boxShadow: "-webkit-box-shadow: inset 0px 0px 14px 3px rgba(0,0,0,0.74);-moz-box-shadow: inset 0px 0px 14px 3px rgba(0,0,0,0.74);box-shadow: inset 0px 0px 14px 3px rgba(0,0,0,0.74);"
             }}
         >
-            <Typography variant={headerSize as any} sx={{ color: "#b32b2b" }}>
+            <Typography variant={headerSize as any} sx={{ color: "#b32b2b", fontWeight: "700" }}>
                 {headerText}
             </Typography>
         </Box>

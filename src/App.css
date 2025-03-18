@@ -5,6 +5,27 @@
   box-sizing: border-box;
 }
 
+/*.footer {*/
+/*  position: relative;*/
+/*  background: #333; !* Adjust color *!*/
+/*  color: white;*/
+/*  padding: 50px;*/
+/*  clip-path: polygon(0 0, 100% 0, 100% 100%, 30% 100%);*/
+/*}*/
+
+/*.footer::before {*/
+/*  content: "";*/
+/*  position: absolute;*/
+/*  top: -40px; !* Adjust height of triangle *!*/
+/*  left: 50%;*/
+/*  transform: translateX(-50%);*/
+/*  width: 0;*/
+/*  height: 0;*/
+/*  border-left: 30px solid transparent;*/
+/*  border-right: 30px solid transparent;*/
+/*  border-bottom: 40px solid #333; !* Match footer background *!*/
+/*}*/
+
 
 /*.App {*/
 /*  text-align: center;*/
