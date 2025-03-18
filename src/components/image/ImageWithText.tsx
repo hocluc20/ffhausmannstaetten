@@ -23,7 +23,7 @@ const ImageWithText: React.FC<ImageWithTextProps> = ({ imageUrl, title, text, li
                 position: 'relative',
                 overflow: 'hidden',
                 borderRadius: 2,
-                boxShadow: 3,
+                boxShadow: "-webkit-box-shadow: 5px 5px 14px 3px rgba(0,0,0,0.4);-moz-box-shadow: 5px 5px 14px 3px rgba(0,0,0,0.4);box-shadow: 5px 5px 14px 3px rgba(0,0,0,0.4)",
                 cursor: 'pointer', // Zeigt, dass die Card klickbar ist
                 '&:hover .image': {
                     transform: 'scale(1.1)', // Zoom-Effekt bei Hover
