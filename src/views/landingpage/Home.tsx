@@ -11,63 +11,17 @@ import FireTruckIcon from '@mui/icons-material/FireTruck';
 import FireHydrantAltIcon from '@mui/icons-material/FireHydrantAlt';
 import PersonIcon from '@mui/icons-material/Person';
 import HeaderWithBackground from "../../components/header/HeaderWithBackground";
+import {mockTaetigkeiten} from "../../mockdata/mockdata";
 
 
-interface MockDataItem {
-    text: string;
-    title: string;
-    imageUrl: string;
-    link: string;
-}
-
-// Mock data for the grids
-const mockDataPrimary: MockDataItem[] = [
-    {
-        text: "Verkehrsunfall",
-        title: "T03V",
-        imageUrl: "/images/FFHausMitAutos.jpg",
-        link: "impressum",
-    },
-    {
-        text: "Brandbekämpfung",
-        title: "B02",
-        imageUrl: "/images/FFHausMitAutos.jpg",
-        link: "services",
-    },
-    {
-        text: "Technische Hilfe",
-        title: "T01",
-        imageUrl: "/images/FFHausMitAutos.jpg",
-        link: "contact",
-    },
-    {
-        text: "Hochwasser",
-        title: "H01",
-        imageUrl: "/images/FFHausMitAutos.jpg",
-        link: "flood-info",
-    },
-    {
-        text: "Tierrettung",
-        title: "T02",
-        imageUrl: "/images/FFHausMitAutos.jpg",
-        link: "animal-rescue",
-    },
-    {
-        text: "Gefahrgutunfall",
-        title: "G01",
-        imageUrl: "/images/FFHausMitAutos.jpg",
-        link: "hazmat-info",
-    }
-];
 
 const stats = [
-    { icon: <FireHydrantAltIcon sx={{fontSize:"5rem"}}/>, value: mockDataPrimary.length, label: "Einsätze" },
+    { icon: <FireHydrantAltIcon sx={{fontSize:"5rem"}}/>, value: mockTaetigkeiten.filter(value => value.date.includes(new Date().getFullYear().toString())).length, label: "Einsätze" },
     { icon: <PersonIcon sx={{fontSize:"5rem"}}/>, value: 104, label: "Mitglieder" },
     { icon: <FireTruckIcon sx={{fontSize:"5rem"}}/>, value: 4, label: "Fahrzeuge" },
 ];
 
 const Home: React.FC = () => {
-    // TO-DO: Get immer die 3 aktuellsten Ereignisse
     return (
         <Box sx={{width: "100%", maxWidth: "100%", alignItems:"center"}}>
             <WelcomePopup/>
@@ -104,7 +58,7 @@ const Home: React.FC = () => {
                 ))}
             </Grid>
 
-            <HeaderWithBackground headerText={"Neuigkeiten"} headerSize={"h1"} imageName={"sam_3937.jpg"}/>
+            <HeaderWithBackground headerText={"Neuigkeiten"} headerSize={"h1"} imageName={"sam_3937.jpg"} polygon={"polygon(18% 0%, 121% 26%, 134% 1%, 73% 97%, -17% 65%, -13% 27%)"} heightInRem={20}/>
 
             <Grid
                 container
@@ -120,13 +74,14 @@ const Home: React.FC = () => {
             >
                 <Grid item xs={false} sm={1.4} md={1.4}></Grid>
 
-                {mockDataPrimary.slice(0, 3).map((item, index) => (
+                {mockTaetigkeiten.slice(0, 3).map((item, index) => (
                     <Grid item xs={12} sm={6} md={3} key={index + 3}>
                         <ImageWithText
-                            text={item.text}
-                            title={item.title}
-                            imageUrl={item.imageUrl}
-                            link={item.link}
+                            text={item.title}
+                            title={item.alarmstichwort}
+                            imageUrl={item.photos[0]}
+                            link={""}
+                            id={item.id}
                         />
                     </Grid>
                 ))}
@@ -147,14 +102,15 @@ const Home: React.FC = () => {
                 }}
             >
                 <Grid item xs={false} sm={1.4} md={1.4}></Grid>
-                {mockDataPrimary.slice(3, 6).map((item, index) => (
+                {mockTaetigkeiten.slice(3, 6).map((item, index) => (
                     <Grid item xs={12} sm={6} md={3} key={index + 3}>
                         <ImageWithText
-                            text={item.text}
-                            title={item.title}
-                            imageUrl={item.imageUrl}
-                            link={item.link}
-                        />
+                            text={item.title}
+                            title={item.alarmstichwort}
+                            imageUrl={item.photos[0]}
+                            link={""}
+                            id={item.id}
+                            />
                     </Grid>
                 ))}
                 <Grid item xs={false} sm={1.4} md={1.4}></Grid>

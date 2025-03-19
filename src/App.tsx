@@ -12,6 +12,8 @@ import Home from "./views/landingpage/Home";
 import Mitglieder from "./views/mitglieder/Mitglieder";
 import Fahrzeuge from "./views/fahrzeuge/Fahrzeuge";
 import Taetigkeiten from "./views/taetigkeiten/Taetigkeiten";
+import TaetigkeitDetailedView from "./views/taetigkeit/TaetigkeitDetailedView";
+import {mockTaetigkeiten} from "./mockdata/mockdata";
 
 
 function App() {
@@ -30,6 +32,10 @@ function App() {
                                   <Route path="/mannschaft" element={<Mitglieder/>}/>
                                   <Route path="/fahrzeuge" element={<Fahrzeuge/>}/>
                                   <Route path="/einsaetzeUndTaetigkeiten" element={<Taetigkeiten/>}/>
+                                <Route
+                                    path="/taetigkeit/:id"
+                                    element={<TaetigkeitDetailedView />}
+                                />
                             </Route>
                         </Routes>
                     </BrowserRouter>

@@ -56,7 +56,7 @@ const Header: React.FC = () => {
             >
                 <Toolbar sx={{ display: 'flex', alignItems: 'center' }}>
 
-                    <Box component="img" src="/01_logo_white.svg" alt="Freiwillige Feuerwehr Hausmannstätten" sx={{height: '7rem',
+                    <Box component="img" src="/01_logo_white.svg" alt="Freiwillige Feuerwehr Hausmannstätten" sx={{height: '7rem', marginTop: "0.4rem",
                         width: 'auto', borderBottom: `3px solid ${theme.palette.warning.main}`, paddingBottom: '0.5rem', marginRight: 'auto'}} />
 
 
