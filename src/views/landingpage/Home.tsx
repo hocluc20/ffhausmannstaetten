@@ -12,6 +12,8 @@ import FireHydrantAltIcon from '@mui/icons-material/FireHydrantAlt';
 import PersonIcon from '@mui/icons-material/Person';
 import HeaderWithBackground from "../../components/header/HeaderWithBackground";
 import {mockTaetigkeiten} from "../../mockdata/mockdata";
+import {useAPI} from "../../common/context/DataContext";
+import {getRenderedImage} from "../../common/API/BASER_API";
 
 
 
@@ -22,6 +24,14 @@ const stats = [
 ];
 
 const Home: React.FC = () => {
+    const {getPostsByCategory,categories,operations} = useAPI()
+
+
+    useEffect(() => {
+        console.log(operations)
+    }, [operations]);
+
+
     return (
         <Box sx={{width: "100%", maxWidth: "100%", alignItems:"center"}}>
             <WelcomePopup/>
@@ -74,14 +84,14 @@ const Home: React.FC = () => {
             >
                 <Grid item xs={false} sm={1.4} md={1.4}></Grid>
 
-                {mockTaetigkeiten.slice(0, 3).map((item, index) => (
+                {operations.slice(0, 3).map((item, index) => (
                     <Grid item xs={12} sm={6} md={3} key={index + 3}>
                         <ImageWithText
                             text={item.title}
-                            title={item.alarmstichwort}
-                            imageUrl={item.photos[0]}
+                            title={item.type.name_short}
+                            imageUrl={item.headline_image_rendered}
                             link={""}
-                            id={item.id}
+                            id={item.id +""}
                         />
                     </Grid>
                 ))}
@@ -102,15 +112,15 @@ const Home: React.FC = () => {
                 }}
             >
                 <Grid item xs={false} sm={1.4} md={1.4}></Grid>
-                {mockTaetigkeiten.slice(3, 6).map((item, index) => (
+                {operations.slice(3, 6).map((item, index) => (
                     <Grid item xs={12} sm={6} md={3} key={index + 3}>
                         <ImageWithText
                             text={item.title}
-                            title={item.alarmstichwort}
-                            imageUrl={item.photos[0]}
+                            title={item.type.name_short}
+                            imageUrl={item.headline_image_rendered}
                             link={""}
-                            id={item.id}
-                            />
+                            id={item.id +""}
+                        />
                     </Grid>
                 ))}
                 <Grid item xs={false} sm={1.4} md={1.4}></Grid>
