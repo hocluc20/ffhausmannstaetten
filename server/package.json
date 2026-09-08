@@ -1,0 +1,26 @@
+{
+  "name": "ffhausmannstaetten-server",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Custom backend fuer die Website der FF Hausmannstaetten (WordPress-REST-kompatibel).",
+  "main": "src/server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "seed": "node src/seed.js",
+    "import:wp": "node src/import-wp.js",
+    "test": "node --test test/"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.5.0",
+    "cors": "^2.8.5",
+    "express": "^4.21.1"
+  },
+  "devDependencies": {
+    "jsdom": "^24.1.3"
+  }
+}

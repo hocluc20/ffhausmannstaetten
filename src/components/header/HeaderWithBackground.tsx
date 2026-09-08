@@ -1,33 +1,27 @@
 import React from 'react';
-import { Box, Typography } from '@mui/material';
-import {height} from "@mui/system";
+import ParallaxSection from './ParallaxSection';
 
-const HeaderWithBackground: React.FC<{ headerText: string, headerSize: string, imageName: string, polygon?:string, heightInRem?:number }> = ({ headerText, headerSize, imageName, polygon, heightInRem }) => {
-    // Header size: h1-h6
-    return (
-        <Box
-            sx={{
-                backgroundImage: `url("/images/${imageName}")`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                backgroundRepeat: "no-repeat",
-                backgroundAttachment: "fixed",
-                height: heightInRem ? heightInRem+"rem": "15rem",
-                width: "100%",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                // polygon(30% 0%, 124% 33%, 114% 62%, 68% 99%, -3% 83%, -8% 15%)
-                clipPath: polygon ? polygon : "",
-                boxShadow: "-webkit-box-shadow: inset 0px 0px 14px 3px rgba(0,0,0,0.74);-moz-box-shadow: inset 0px 0px 14px 3px rgba(0,0,0,0.74);box-shadow: inset 0px 0px 14px 3px rgba(0,0,0,0.74);"
-            }}
-        >
-            <Typography variant={headerSize as any} sx={{ color: "#b32b2b", fontWeight: "700" }}>
-                {headerText}
-            </Typography>
-        </Box>
-    );
-};
+/**
+ * Abschnittsueberschrift mit stehendem Hintergrundbild aus /images.
+ * Duenne Huelle um ParallaxSection, damit alle bestehenden Aufrufe den
+ * neuen Effekt bekommen.
+ */
+const HeaderWithBackground: React.FC<{
+    headerText: string;
+    headerSize: string;
+    imageName: string;
+    eyebrow?: string;
+    polygon?: string;
+    heightInRem?: number;
+}> = ({ headerText, headerSize, imageName, eyebrow, polygon, heightInRem }) => (
+    <ParallaxSection
+        image={imageName}
+        headerText={headerText}
+        headerSize={(headerSize as "h1" | "h2" | "h3" | "h4") ?? "h2"}
+        eyebrow={eyebrow}
+        polygon={polygon}
+        heightInRem={heightInRem ?? 15}
+    />
+);
 
 export default HeaderWithBackground;
-

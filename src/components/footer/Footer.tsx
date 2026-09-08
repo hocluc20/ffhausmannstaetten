@@ -1,49 +1,66 @@
 import React from "react";
-import {
-    Box,
-    Container,
-    Grid,
-    Typography,
-    Link,
-    useTheme,
-} from "@mui/material";
+import { Box, Container, Grid, Typography, Link, useTheme } from "@mui/material";
 import { Email, Facebook, Instagram, Info, Phone } from "@mui/icons-material";
+import { Link as RouterLink } from "react-router-dom";
+
+/**
+ * Externe Profile der Feuerwehr.
+ *
+ * Solange hier null steht, wird der Eintrag nicht gerendert - besser kein
+ * Link als ein Link, der ins Leere fuehrt. Sobald die Adressen feststehen,
+ * einfach eintragen.
+ */
+const SOCIAL_LINKS: { label: string; href: string | null; icon: React.ReactNode }[] = [
+    { label: "Facebook", href: null, icon: <Facebook sx={{ mr: 1 }} /> },
+    { label: "Instagram", href: null, icon: <Instagram sx={{ mr: 1 }} /> },
+];
+
+const linkSx = {
+    display: "flex",
+    alignItems: "center",
+    mb: 1,
+    color: "inherit",
+};
 
 const Footer: React.FC = () => {
     const theme = useTheme();
+    const availableSocials = SOCIAL_LINKS.filter((entry) => entry.href);
 
     return (
         <Box
-            component="footer"
+            component="div"
             sx={{
                 position: "relative",
-                background: `linear-gradient(135deg, #b32b2b, #000000)`,
+                background: "linear-gradient(150deg, #b32b2b 0%, #6d1414 45%, #1a1614 100%)",
                 color: "white",
-                height: {
-                    lg: "30rem",
-                    md: "30rem",
-                    xs: "45rem"
-                },
-                py: 4,
+                // Hoehe folgt dem Inhalt: feste Werte haben bei laengeren
+                // Texten oder grossen Schriftgraden zu Ueberlauf gefuehrt.
+                pt: { xs: 6, md: 10 },
+                pb: { xs: 5, md: 7 },
+                mt: { xs: 6, md: 10 },
                 clipPath: {
                     xs: "none",
-                    md: "polygon(35% 10%, 250% 100%, -70% 100%)",
+                    md: "polygon(0 42px, 100% 0, 100% 100%, 0 100%)",
                 },
-                boxShadow: "-webkit-box-shadow: 0px 0px 14px 3px rgba(0,0,0,0.74);-moz-box-shadow: 0px 0px 14px 3px rgba(0,0,0,0.74);box-shadow: 0px 0px 14px 3px rgba(0,0,0,0.74);"
+                // Goldene Oberkante als Abschluss.
+                "&::after": {
+                    content: '""',
+                    position: "absolute",
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    height: "4px",
+                    background: "linear-gradient(90deg, #ffd700, #b32b2b)",
+                },
             }}
         >
-            <Container maxWidth="lg" sx={{
-                marginTop: {
-                    md: "10rem",
-                    lg: "10rem"
-                }
-            }}>
-                {/* Footer Sections */}
+            <Container maxWidth="lg">
                 <Grid container spacing={4} justifyContent="space-between">
-                    {/* Section: Kontaktdaten */}
+                    {/* Kontaktdaten */}
                     <Grid item xs={12} sm={4}>
                         <Typography
                             variant="h6"
+                            component="h2"
                             gutterBottom
                             sx={{
                                 borderBottom: `3px solid ${theme.palette.warning.main}`,
@@ -62,24 +79,18 @@ const Footer: React.FC = () => {
                         </Typography>
                         <Link
                             href="mailto:kdo.020@bfvgu.steiermark.at"
-                            color="inherit"
                             underline="hover"
-                            sx={{
-                                display: "flex",
-                                alignItems: "center",
-                                mt: 2,
-                                // color: theme.palette.warning.light,
-                                fontFamily: '"Roboto", "Arial", sans-serif',
-                            }}
+                            sx={{ ...linkSx, mt: 2 }}
                         >
                             <Email sx={{ mr: 1 }} /> kdo.020@bfvgu.steiermark.at
                         </Link>
                     </Grid>
 
-                    {/* Section: Information */}
+                    {/* Information */}
                     <Grid item xs={12} sm={4}>
                         <Typography
                             variant="h6"
+                            component="h2"
                             gutterBottom
                             sx={{
                                 borderBottom: `3px solid ${theme.palette.warning.main}`,
@@ -91,98 +102,64 @@ const Footer: React.FC = () => {
                         </Typography>
                         <Box component="ul" sx={{ listStyle: "none", pl: 0, mt: 2 }}>
                             <li>
-                                <Link
-                                    href="#"
-                                    color="inherit"
-                                    underline="hover"
-                                    sx={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                        mb: 1,
-                                        fontFamily: '"Roboto", "Arial", sans-serif',
-                                    }}
-                                >
+                                <Link component={RouterLink} to="/impressum" underline="hover" sx={linkSx}>
                                     <Info sx={{ mr: 1 }} /> Impressum
                                 </Link>
                             </li>
                             <li>
-                                <Link
-                                    href="#"
-                                    color="inherit"
-                                    underline="hover"
-                                    sx={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                        fontFamily: '"Roboto", "Arial", sans-serif',
-                                    }}
-                                >
+                                <Link component={RouterLink} to="/kontakt" underline="hover" sx={linkSx}>
                                     <Phone sx={{ mr: 1 }} /> Kontakt
                                 </Link>
                             </li>
                         </Box>
                     </Grid>
 
-                    {/* Section: Links */}
-                    <Grid item xs={12} sm={4}>
-                        <Typography
-                            variant="h6"
-                            gutterBottom
-                            sx={{
-                                borderBottom: `3px solid ${theme.palette.warning.main}`,
-                                display: "inline-block",
-                                pb: 0.5,
-                                fontFamily: '"Roboto", "Arial", sans-serif',
-                            }}
-                        >
-                            LINKS
-                        </Typography>
-                        <Box component="ul" sx={{ listStyle: "none", pl: 0, mt: 2 }}>
-                            <li>
-                                <Link
-                                    href="#"
-                                    color="inherit"
-                                    underline="hover"
-                                    sx={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                        mb: 1,
-                                        fontFamily: '"Roboto", "Arial", sans-serif',
-                                    }}
-                                >
-                                    <Facebook sx={{ mr: 1 }} /> Facebook
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    href="#"
-                                    color="inherit"
-                                    underline="hover"
-                                    sx={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                        fontFamily: '"Roboto", "Arial", sans-serif',
-                                    }}
-                                >
-                                    <Instagram sx={{ mr: 1 }} /> Instagram
-                                </Link>
-                            </li>
-                        </Box>
-                    </Grid>
+                    {/* Links - nur rendern, wenn Adressen hinterlegt sind */}
+                    {availableSocials.length > 0 && (
+                        <Grid item xs={12} sm={4}>
+                            <Typography
+                                variant="h6"
+                                component="h2"
+                                gutterBottom
+                                sx={{
+                                    borderBottom: `3px solid ${theme.palette.warning.main}`,
+                                    display: "inline-block",
+                                    pb: 0.5,
+                                }}
+                            >
+                                LINKS
+                            </Typography>
+                            <Box component="ul" sx={{ listStyle: "none", pl: 0, mt: 2 }}>
+                                {availableSocials.map((entry) => (
+                                    <li key={entry.label}>
+                                        <Link
+                                            href={entry.href as string}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            underline="hover"
+                                            sx={linkSx}
+                                        >
+                                            {entry.icon} {entry.label}
+                                        </Link>
+                                    </li>
+                                ))}
+                            </Box>
+                        </Grid>
+                    )}
                 </Grid>
 
-                {/* Footer Bottom */}
                 <Box
                     sx={{
                         textAlign: "center",
-                        borderTop: `1px solid ${theme.palette.primary.dark}`,
+                        borderTop: "1px solid rgba(255,255,255,0.25)",
                         mt: 4,
                         pt: 2,
                         color: theme.palette.grey[300],
                     }}
                 >
                     <Typography variant="body2">
-                        &copy; {new Date().getFullYear()} Freiwillige Feuerwehr Hausmannstätten. Alle Rechte
-                        vorbehalten.
+                        &copy; {new Date().getFullYear()} Freiwillige Feuerwehr Hausmannstätten. Alle
+                        Rechte vorbehalten.
                     </Typography>
                 </Box>
             </Container>

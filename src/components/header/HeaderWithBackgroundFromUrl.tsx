@@ -6,35 +6,36 @@
  **/
 
 import React from 'react';
-import { Box, Typography } from '@mui/material';
-import {height} from "@mui/system";
+import ParallaxSection from './ParallaxSection';
 
-const HeaderWithBackgroundUrl: React.FC<{ headerText: string, headerSize: string, imageName: string, polygon?:string, heightInRem?:number }> = ({ headerText, headerSize, imageName, polygon, heightInRem }) => {
-    // Header size: h1-h6
+const FALLBACK_IMAGE = "sam_3937.jpg";
+
+/**
+ * Wie HeaderWithBackground, aber mit einer vollstaendigen Bild-URL
+ * (z. B. aus der WordPress-Mediathek).
+ */
+const HeaderWithBackgroundUrl: React.FC<{
+    headerText: string;
+    headerSize: string;
+    imageName?: string;
+    eyebrow?: string;
+    polygon?: string;
+    heightInRem?: number;
+}> = ({ headerText, headerSize, imageName, eyebrow, polygon, heightInRem }) => {
+    // Ohne Guard stand hier bei fehlendem Bild url("undefined") bzw. url("false").
+    const hasUrl = Boolean(imageName && imageName.trim());
+
     return (
-        <Box
-            sx={{
-                backgroundImage: `url("${imageName}")`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                backgroundRepeat: "no-repeat",
-                backgroundAttachment: "fixed",
-                height: heightInRem ? heightInRem+"rem": "15rem",
-                width: "100%",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                // polygon(30% 0%, 124% 33%, 114% 62%, 68% 99%, -3% 83%, -8% 15%)
-                clipPath: polygon ? polygon : "",
-                boxShadow: "-webkit-box-shadow: inset 0px 0px 14px 3px rgba(0,0,0,0.74);-moz-box-shadow: inset 0px 0px 14px 3px rgba(0,0,0,0.74);box-shadow: inset 0px 0px 14px 3px rgba(0,0,0,0.74);"
-            }}
-        >
-            <Typography variant={headerSize as any} sx={{ color: "#b32b2b", fontWeight: "700" }}>
-                {headerText}
-            </Typography>
-        </Box>
+        <ParallaxSection
+            image={hasUrl ? (imageName as string) : FALLBACK_IMAGE}
+            absoluteUrl={hasUrl}
+            headerText={headerText}
+            headerSize={(headerSize as "h1" | "h2" | "h3" | "h4") ?? "h2"}
+            eyebrow={eyebrow}
+            polygon={polygon}
+            heightInRem={heightInRem ?? 15}
+        />
     );
 };
 
 export default HeaderWithBackgroundUrl;
-

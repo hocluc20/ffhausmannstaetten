@@ -1,41 +1,5 @@
 import React from 'react';
-import {Card, CardContent, Typography, Box, styled, useTheme} from '@mui/material';
-
-const HoverableImage = styled(Box)(({ theme }) => ({
-    position: 'relative',
-    width: "100%",
-    height: 300,
-    margin: '0 auto',
-    overflow: 'hidden',
-    borderRadius: theme.shape.borderRadius,
-    boxShadow: theme.shadows[2],
-    '&:hover .hoverOverlay': {
-        opacity: 1,
-    },
-}));
-
-const Image = styled('img')({
-    width: '100%',
-    height: '100%',
-    objectFit: 'cover',
-});
-
-const HoverOverlay = styled(Box)(({ theme }) => ({
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    backgroundColor: theme.palette.action.hover,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    color: theme.palette.common.white,
-    fontSize: '1.2rem',
-    fontWeight: 'bold',
-    opacity: 0,
-    transition: 'opacity 0.3s ease-in-out',
-}));
+import { Card, CardContent, Typography, Box } from '@mui/material';
 
 interface ProfileCardProps {
     name: string;
@@ -44,23 +8,96 @@ interface ProfileCardProps {
     imageUrl: string;
 }
 
-const ProfileCard: React.FC<ProfileCardProps> = ({ name, rank, function: userFunction, imageUrl }) => {
-    const theme = useTheme();
+const ProfileCard: React.FC<ProfileCardProps> = ({
+    name,
+    rank,
+    function: userFunction,
+    imageUrl,
+}) => {
     return (
-        <Card sx={{ maxWidth: 300, textAlign: 'center', borderRadius: 2, boxShadow: 3 }}>
-            <CardContent>
-                <HoverableImage>
-                    <Image src={imageUrl} alt={name} />
-                    <HoverOverlay className="hoverOverlay" sx={{color:"#ffffff", fontFamily:"sans-serif", backgroundColor:'rgba(0, 0, 0, 0.35)'}}>{userFunction}</HoverOverlay>
-                </HoverableImage>
-                <Box mt={2}>
-                    <Typography variant="h6" component="div" color={"#000000"}>
-                        {name}
+        <Card
+            sx={{
+                width: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                borderRadius: 2,
+                overflow: 'hidden',
+                border: '1px solid',
+                borderColor: 'divider',
+                boxShadow: '0 6px 20px rgba(26,22,20,.07)',
+                transition: 'transform .3s cubic-bezier(.22,1,.36,1), box-shadow .3s ease',
+                '&:hover': {
+                    transform: 'translateY(-5px)',
+                    boxShadow: '0 16px 36px rgba(26,22,20,.15)',
+                },
+                '&:hover .portrait': { transform: 'scale(1.06)' },
+                '@media (prefers-reduced-motion: reduce)': {
+                    transition: 'none',
+                    '&:hover': { transform: 'none' },
+                    '& .portrait': { transition: 'none' },
+                },
+            }}
+        >
+            <Box
+                sx={{
+                    position: 'relative',
+                    width: '100%',
+                    aspectRatio: '4 / 5',
+                    overflow: 'hidden',
+                    backgroundColor: '#eceff1',
+                }}
+            >
+                <Box
+                    className="portrait"
+                    component="img"
+                    src={imageUrl}
+                    alt={name}
+                    loading="lazy"
+                    decoding="async"
+                    sx={{
+                        position: 'absolute',
+                        inset: 0,
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        transition: 'transform .5s cubic-bezier(.22,1,.36,1)',
+                    }}
+                />
+                {/* Goldene Kante als wiederkehrendes Motiv. */}
+                <Box
+                    aria-hidden="true"
+                    sx={{
+                        position: 'absolute',
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        height: '4px',
+                        backgroundColor: 'secondary.main',
+                    }}
+                />
+            </Box>
+
+            <CardContent sx={{ p: { xs: 1.5, md: 2 }, flexGrow: 1 }}>
+                <Typography
+                    variant="h6"
+                    component="h3"
+                    sx={{ fontSize: { xs: '0.98rem', md: '1.12rem' }, lineHeight: 1.25 }}
+                >
+                    {name}
+                </Typography>
+                <Typography
+                    variant="body2"
+                    sx={{ color: 'primary.main', fontWeight: 600, mt: 0.25 }}
+                >
+                    {rank}
+                </Typography>
+                {/* Die Funktion war vorher nur beim Hover sichtbar und damit
+                    auf Touchgeraeten und per Tastatur gar nicht erreichbar. */}
+                {userFunction && (
+                    <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+                        {userFunction}
                     </Typography>
-                    <Typography variant="body2" color={theme.palette.primary.main}>
-                        {rank}
-                    </Typography>
-                </Box>
+                )}
             </CardContent>
         </Card>
     );

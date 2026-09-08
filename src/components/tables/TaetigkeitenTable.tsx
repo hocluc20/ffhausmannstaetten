@@ -1,7 +1,9 @@
 import {
-    Box, Button,
+    Box,
+    Button,
     FormControl,
-    InputLabel, MenuItem,
+    InputLabel,
+    MenuItem,
     Paper,
     Select,
     Table,
@@ -11,320 +13,174 @@ import {
     TableHead,
     TableRow,
     TableSortLabel,
-    TextField
+    Typography,
 } from '@mui/material';
-import React, {useState} from 'react';
+import React, { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { IOperation } from "../../common/models/IOperation";
+import KindBadge from "../operations/KindBadge";
 
-interface taetProps {
-    taetigkeiten: ITaetigkeit[];
+interface TaetigkeitenTableProps {
+    taetigkeiten: IOperation[];
 }
-const TaetigkeitenTable: React.FC<taetProps> = ({taetigkeiten}) => {
-    const [order, setOrder] = useState<'asc' | 'desc'>('desc');
-    const [orderBy, setOrderBy] = useState<string>('date');
-    const [filterText, setFilterText] = useState<string>('');
-    const [monthFilter, setMonthFilter] = useState<string>('Alle');
-    const [alarmFilter, setAlarmFilter] = useState<string>('Alle');
 
-    const handleRequestSort = (property: string) => {
+type SortKey = 'type' | 'title' | 'date';
+
+const ALL = 'Alle';
+
+const dateFormatter = new Intl.DateTimeFormat('de-AT', {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric',
+});
+
+/** Sortierschluessel MM/YYYY, damit die Auswahl chronologisch bleibt. */
+const monthKey = (date: Date) =>
+    `${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()}`;
+
+const TaetigkeitenTable: React.FC<TaetigkeitenTableProps> = ({ taetigkeiten }) => {
+    const [order, setOrder] = useState<'asc' | 'desc'>('desc');
+    const [orderBy, setOrderBy] = useState<SortKey>('date');
+    const [monthFilter, setMonthFilter] = useState(ALL);
+
+    const handleRequestSort = (property: SortKey) => {
         const isAsc = orderBy === property && order === 'asc';
         setOrder(isAsc ? 'desc' : 'asc');
         setOrderBy(property);
     };
 
-    const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setFilterText(event.target.value as string);
-    };
+    const monthsAndYears = useMemo(() => {
+        const keys = Array.from(new Set(taetigkeiten.map((t) => monthKey(t.date))));
+        keys.sort((a, b) => {
+            const [ma, ya] = a.split('/');
+            const [mb, yb] = b.split('/');
+            return `${yb}${mb}`.localeCompare(`${ya}${ma}`);
+        });
+        return [ALL, ...keys];
+    }, [taetigkeiten]);
 
-    const handleMonthFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setMonthFilter(event.target.value as string);
-    };
-
-    const handleAlarmFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setAlarmFilter(event.target.value as string);
-    };
-
-    const filteredTaetigkeiten = taetigkeiten.filter(taetigkeit => {
-        const matchesTextFilter = Object.values(taetigkeit).some(val =>
-            val.toString().toLowerCase().includes(filterText.toLowerCase())
+    const visible = useMemo(() => {
+        // Suche und Art filtert bereits die Leiste ueber der Tabelle; hier
+        // bleibt nur der Zeitraum, den es dort nicht gibt.
+        const filtered = taetigkeiten.filter(
+            (operation) => monthFilter === ALL || monthKey(operation.date) === monthFilter
         );
 
-        const matchesAlarmFilter = alarmFilter.includes("Alle") || taetigkeit.alarmstichwort.toLowerCase().includes(alarmFilter.toLowerCase());
-
-        let matchesMonthFilter = true;
-        if (monthFilter) {
-            const dateParts = taetigkeit.date.split(' ');
-            const monthString = dateParts[1];
-            const year = dateParts[2];
-
-            const monthMap: { [key: string]: string } = {
-                Januar: '01',
-                Februar: '02',
-                März: '03',
-                April: '04',
-                Mai: '05',
-                Juni: '06',
-                Juli: '07',
-                August: '08',
-                September: '09',
-                Oktober: '10',
-                November: '11',
-                Dezember: '12',
-            };
-            const month = monthMap[monthString];
-
-            matchesMonthFilter = (`${month}/${year}` === monthFilter) || (monthFilter === "Alle");
-        }
-
-        return matchesTextFilter && matchesAlarmFilter && matchesMonthFilter;
-    });
-
-    const sortData = (array: ITaetigkeit[]) => {
-        return array.sort((a, b) => {
+        // Kopie sortieren, damit die Liste aus dem Context unveraendert bleibt.
+        return [...filtered].sort((a, b) => {
             if (orderBy === 'date') {
-                const parseDate = (dateString: string): Date => {
-                    const dateParts = dateString.split(' '); // z.B. ["18.", "März", "2025"]
-                    const day = parseInt(dateParts[0].replace('.', '').trim(), 10); // Tag extrahieren
-                    const monthString = dateParts[1]; // Monat extrahieren
-                    const year = parseInt(dateParts[2], 10); // Jahr extrahieren
-
-                    const monthMap: { [key: string]: number } = {
-                        Januar: 0,
-                        Februar: 1,
-                        März: 2,
-                        April: 3,
-                        Mai: 4,
-                        Juni: 5,
-                        Juli: 6,
-                        August: 7,
-                        September: 8,
-                        Oktober: 9,
-                        November: 10,
-                        Dezember: 11,
-                    };
-                    const month = monthMap[monthString];
-
-                    // Rückgabe eines Date-Objekts
-                    return new Date(year, month, day);
-                };
-
-                const dateA = parseDate(a.date);
-                const dateB = parseDate(b.date);
-
-                return order === 'asc' ? dateA.getTime() - dateB.getTime() : dateB.getTime() - dateA.getTime();
+                const diff = a.date.getTime() - b.date.getTime();
+                return order === 'asc' ? diff : -diff;
             }
-            const propA = a[orderBy].toString().toLowerCase();
-            const propB = b[orderBy].toString().toLowerCase();
-            return order === 'asc' ? propA.localeCompare(propB) : propB.localeCompare(propA);
+            const valueA = (orderBy === 'type' ? a.type?.name_short ?? '' : a.title).toLowerCase();
+            const valueB = (orderBy === 'type' ? b.type?.name_short ?? '' : b.title).toLowerCase();
+            return order === 'asc'
+                ? valueA.localeCompare(valueB, 'de')
+                : valueB.localeCompare(valueA, 'de');
         });
-    };
-
-    const sortedTaetigkeiten = sortData(filteredTaetigkeiten);
-
-    const monthsAndYears = Array.from(new Set(taetigkeiten.map((taetigkeit) => {
-        const dateParts = taetigkeit.date.split(' ');
-        const monthString = dateParts[1];
-        const year = dateParts[2];
-
-        const monthMap: { [key: string]: string } = {
-            Januar: '01',
-            Februar: '02',
-            März: '03',
-            April: '04',
-            Mai: '05',
-            Juni: '06',
-            Juli: '07',
-            August: '08',
-            September: '09',
-            Oktober: '10',
-            November: '11',
-            Dezember: '12',
-        };
-        const month = monthMap[monthString];
-
-        return `${month}/${year}`;
-    })));
-
-    monthsAndYears.unshift("Alle")
-
-    const alarmStichwoerter = Array.from(new Set(taetigkeiten.map((taetigkeit) => taetigkeit.alarmstichwort)));
-    alarmStichwoerter.unshift("Alle")
+    }, [taetigkeiten, monthFilter, order, orderBy]);
 
     return (
         <>
-            <Box sx={{textAlign: "center"}}>
-                <TextField
-                    label="Nach Tätigkeiten suchen"
-                    variant="outlined"
-                    fullWidth
-                    value={filterText}
-                    onChange={handleSearchChange}
-                    sx={{
-                        marginBottom: '20px',
-                        maxWidth: 1000,
-                        margin: '20px auto',
-                        padding: '10px',
-                        color: "#000000",
-                        borderColor: '#444444',
-                        borderWidth: 1,
-                        '& .MuiOutlinedInput-root': {
-                            '& fieldset': {
-                                borderColor: '#444444',
-                            },
-                            '& input': {
-                                color: '#000000',
-                            },
-                        }
-                    }}
-                />
-            </Box>
-            <Box sx={{textAlign: "center"}}>
-                <FormControl fullWidth
-                             sx={{
-                                 marginBottom: '20px',
-                                 maxWidth: 500,
-                                 margin: '20px auto',
-                                 padding: '10px',
-                                 color: "#000000",
-                                 borderColor: '#444444',
-                                 borderWidth: 1,
-                                 '& .MuiOutlinedInput-root': {
-                                     '& fieldset': {
-                                         borderColor: '#444444',
-                                     }
-                                 }
-                             }}>
-                    <InputLabel>Alarmstichwort filtern</InputLabel>
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    gap: 2,
+                    justifyContent: 'center',
+                    px: 2,
+                    mb: 2,
+                }}
+            >
+                <FormControl size="small" sx={{ minWidth: 240, flex: '1 1 240px', maxWidth: 400 }}>
+                    <InputLabel id="month-filter-label">Datum filtern</InputLabel>
                     <Select
-                        value={alarmFilter}
-                        onChange={handleAlarmFilterChange}
-                        label="Alarmstichwort filtern"
-                        sx={{color: "#000000"}}
-                    >
-                        {alarmStichwoerter.map((alarm, index) => (
-                            <MenuItem key={index} value={alarm} sx={{color: "#000000"}}>
-                                {alarm}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
-                <FormControl fullWidth
-                             sx={{
-                                 marginBottom: '20px',
-                                 maxWidth: 500,
-                                 margin: '20px auto',
-                                 padding: '10px',
-                                 color: "#000000",
-                                 borderColor: '#444444',
-                                 borderWidth: 1,
-                                 '& .MuiOutlinedInput-root': {
-                                     '& fieldset': {
-                                         borderColor: '#444444',
-                                     }
-                                 }
-                             }}>
-                    <InputLabel>Datum filtern</InputLabel>
-                    <Select
+                        labelId="month-filter-label"
                         value={monthFilter}
-                        onChange={handleMonthFilterChange}
-                        label="Monat filtern (MM/YYYY)"
-                        sx={{color: "#000000"}}
+                        onChange={(event) => setMonthFilter(event.target.value)}
+                        label="Datum filtern"
                     >
-                        {monthsAndYears.map((monthYear, index) => (
-                            <MenuItem key={index} value={monthYear} sx={{color: "#000000"}}>
+                        {monthsAndYears.map((monthYear) => (
+                            <MenuItem key={monthYear} value={monthYear}>
                                 {monthYear}
                             </MenuItem>
                         ))}
                     </Select>
                 </FormControl>
             </Box>
-            <TableContainer component={Paper} sx={{maxWidth: 1000, margin: '20px auto', padding: '10px'}}>
-                <Table sx={{minWidth: 650}}>
+
+            <TableContainer
+                component={Paper}
+                sx={{ maxWidth: 1000, margin: '20px auto', overflowX: 'auto' }}
+            >
+                <Table sx={{ minWidth: 650 }} aria-label="Liste der Tätigkeiten">
                     <TableHead>
-                        <TableRow sx={{backgroundColor: '#b32b2b', color: '#ffffff'}}>
-                            <TableCell sx={{fontWeight: 'bold', color: '#ffffff'}}>
-                                <TableSortLabel
-                                    active={orderBy === 'alarmstichwort'}
-                                    direction={orderBy === 'alarmstichwort' ? order : 'asc'}
-                                    onClick={() => handleRequestSort('alarmstichwort')}
-                                >
-                                    Alarmstichwort
-                                </TableSortLabel>
-                            </TableCell>
-                            <TableCell sx={{fontWeight: 'bold', color: '#ffffff'}}>
-                                <TableSortLabel
-                                    active={orderBy === 'alarmtitelStichwort'}
-                                    direction={orderBy === 'alarmtitelStichwort' ? order : 'asc'}
-                                    onClick={() => handleRequestSort('alarmtitelStichwort')}
-                                >
-                                    Alarmtitel Stichwort
-                                </TableSortLabel>
-                            </TableCell>
-                            <TableCell sx={{fontWeight: 'bold', color: '#ffffff'}}>
-                                <TableSortLabel
-                                    active={orderBy === 'title'}
-                                    direction={orderBy === 'title' ? order : 'asc'}
-                                    onClick={() => handleRequestSort('title')}
-                                >
-                                    Titel
-                                </TableSortLabel>
-                            </TableCell>
-                            <TableCell sx={{fontWeight: 'bold', color: '#ffffff'}}>
-                                <TableSortLabel
-                                    active={orderBy === 'date'}
-                                    direction={orderBy === 'date' ? order : 'asc'}
-                                    onClick={() => handleRequestSort('date')}
-                                >
-                                    Datum
-                                </TableSortLabel>
-                            </TableCell>
-                            <TableCell sx={{fontWeight: 'bold', color: '#ffffff'}}>Zeiten</TableCell>
-                            <TableCell></TableCell>
+                        <TableRow sx={{ backgroundColor: '#b32b2b' }}>
+                            {([
+                                { key: 'type' as SortKey, label: 'Art' },
+                                { key: 'title' as SortKey, label: 'Titel' },
+                                { key: 'date' as SortKey, label: 'Datum' },
+                            ]).map((column) => (
+                                <TableCell key={column.key} sx={{ fontWeight: 'bold', color: '#ffffff' }}>
+                                    <TableSortLabel
+                                        active={orderBy === column.key}
+                                        direction={orderBy === column.key ? order : 'asc'}
+                                        onClick={() => handleRequestSort(column.key)}
+                                        sx={{
+                                            color: '#ffffff !important',
+                                            '& .MuiTableSortLabel-icon': { color: '#ffffff !important' },
+                                        }}
+                                    >
+                                        {column.label}
+                                    </TableSortLabel>
+                                </TableCell>
+                            ))}
+                            <TableCell />
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {sortedTaetigkeiten.map((taetigkeit, index) => (
-                            <TableRow
-                                key={index}
-                                color={"#000000"}
-                                sx={{
-                                    '&:nth-of-type(odd)': {
-                                        backgroundColor: '#f7f7f7',
-                                    },
-                                    '&:nth-of-type(even)': {
-                                        backgroundColor: 'transparent',
-                                    },
-                                    '& td': {
-                                        color: '#000000',
-                                    },
-                                    '&:hover': {
-                                        backgroundColor: '#d35c5c',
-                                        '& td': {
-                                            color: '#ffffff',
-                                        },
-                                    },
-                                }}
-                            >
-                                <TableCell>{taetigkeit.alarmstichwort}</TableCell>
-                                <TableCell>{taetigkeit.alarmtitelStichwort}</TableCell>
-                                <TableCell>{taetigkeit.title}</TableCell>
-                                <TableCell>{taetigkeit.date}</TableCell>
-                                <TableCell>
-                                    {taetigkeit.startZeit} bis {taetigkeit.endeZeit} Uhr
-                                </TableCell>
-                                <TableCell>
-                                    <Button
-                                        variant="contained"
-                                        color="primary"
-                                        component={Link}
-                                        to={`/taetigkeit/${taetigkeit.id}`}
-                                        sx={{ textTransform: 'none' }}
-                                    >
-                                        Details
-                                    </Button>
+                        {visible.length === 0 ? (
+                            <TableRow>
+                                <TableCell colSpan={4}>
+                                    <Typography variant="body2" color="text.secondary" align="center" sx={{ py: 3 }}>
+                                        Keine Tätigkeiten gefunden.
+                                    </Typography>
                                 </TableCell>
                             </TableRow>
-                        ))}
+                        ) : (
+                            visible.map((operation) => (
+                                <TableRow
+                                    key={operation.id}
+                                    sx={{
+                                        '&:nth-of-type(odd)': { backgroundColor: '#f7f7f7' },
+                                        '&:hover': { backgroundColor: '#ffeaea' },
+                                    }}
+                                >
+                                    <TableCell>
+                                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5, alignItems: 'flex-start' }}>
+                                            <KindBadge kind={operation.kind} />
+                                            {operation.type && (
+                                                <Typography variant="body2" color="text.secondary">
+                                                    {operation.type.name_short}
+                                                </Typography>
+                                            )}
+                                        </Box>
+                                    </TableCell>
+                                    <TableCell>{operation.title}</TableCell>
+                                    <TableCell>{dateFormatter.format(operation.date)}</TableCell>
+                                    <TableCell align="right">
+                                        <Button
+                                            component={Link}
+                                            to={`/taetigkeit/${operation.id}`}
+                                            variant="outlined"
+                                            size="small"
+                                        >
+                                            Details
+                                        </Button>
+                                    </TableCell>
+                                </TableRow>
+                            ))
+                        )}
                     </TableBody>
                 </Table>
             </TableContainer>

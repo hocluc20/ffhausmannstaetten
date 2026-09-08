@@ -1,68 +1,83 @@
 import React, { useEffect, useState } from 'react';
-import { Dialog, DialogActions, DialogContent, DialogTitle, Button } from '@mui/material';
-import { useTheme } from '@mui/material/styles'; // Import für Theme-Hook
+import { Box, Button, Link, Paper, Slide, Typography } from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
 
+const STORAGE_KEY = 'ffh:storage-consent';
+
+/**
+ * Hinweis zur lokalen Speicherung.
+ *
+ * Bewusst kein modaler Dialog mehr: der alte Dialog hat die Seite blockiert
+ * und bot nur "Akzeptieren" - eine Ablehnung muss aber genauso einfach
+ * moeglich sein. Ausserdem setzt die Seite keine Cookies, sondern nutzt
+ * ausschliesslich localStorage fuer Anzeigeeinstellungen.
+ */
 const CookiePopup: React.FC = () => {
     const [open, setOpen] = useState(false);
-    const theme = useTheme();
-
 
     useEffect(() => {
-        const cookieAccepted = localStorage.getItem('cookieAccepted');
-        if (!cookieAccepted) {
-            setOpen(true);
+        try {
+            if (!localStorage.getItem(STORAGE_KEY)) setOpen(true);
+        } catch {
+            // Privater Modus o. Ae.: dann eben kein Hinweis.
         }
     }, []);
 
-
-    const handleAccept = () => {
-        localStorage.setItem('cookieAccepted', 'true');
+    const decide = (value: 'accepted' | 'declined') => () => {
+        try {
+            localStorage.setItem(STORAGE_KEY, value);
+            if (value === 'declined') {
+                // Nicht notwendige Einstellungen wieder entfernen.
+                localStorage.removeItem('popupClosed');
+            }
+        } catch {
+            // Speicherung nicht moeglich - Hinweis trotzdem schliessen.
+        }
         setOpen(false);
     };
 
+    if (!open) return null;
+
     return (
-        <Dialog open={open} onClose={() => setOpen(false)} sx={{
-            '& .MuiDialog-paper': {
-                backgroundColor: theme.palette.background.paper,
-                padding: '20px',
-                borderRadius: '8px',
-                boxShadow: theme.shadows[5],
-            },
-        }}>
-            <DialogTitle sx={{ color: theme.palette.primary.main, fontWeight: 600 }}>
-                Cookies akzeptieren
-            </DialogTitle>
-            <DialogContent
+        <Slide direction="up" in={open} mountOnEnter unmountOnExit>
+            <Paper
+                elevation={8}
+                role="region"
+                aria-label="Hinweis zur Datenspeicherung"
                 sx={{
-                    color: '#000000',
-                    fontSize: theme.typography.body1.fontSize,
-                    fontFamily: theme.typography.fontFamily,
+                    position: 'fixed',
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    zIndex: 1400,
+                    p: 2,
+                    display: 'flex',
+                    flexDirection: { xs: 'column', md: 'row' },
+                    alignItems: { xs: 'stretch', md: 'center' },
+                    gap: 2,
+                    borderRadius: 0,
                 }}
             >
-                <p>
-                    Wir verwenden Cookies, um die Benutzererfahrung zu verbessern. Durch die Nutzung der Website stimmen Sie der Verwendung von Cookies zu.
-                </p>
-            </DialogContent>
+                <Typography variant="body2" sx={{ flex: 1 }}>
+                    Diese Seite speichert kleine Angaben lokal in Ihrem Browser (zum Beispiel, ob
+                    Sie diesen Hinweis bereits gesehen haben). Es werden keine Cookies gesetzt und
+                    keine Daten an Dritte übertragen. Näheres in der{' '}
+                    <Link component={RouterLink} to="/impressum">
+                        Datenschutzerklärung
+                    </Link>
+                    .
+                </Typography>
 
-            <DialogActions>
-                <Button
-                    onClick={handleAccept}
-                    color="primary"
-                    variant="contained"
-                    sx={{
-                        backgroundColor: theme.palette.primary.main,
-                        '&:hover': {
-                            backgroundColor: theme.palette.primary.dark,
-                        },
-                        color: theme.palette.text.primary,
-                        fontWeight: 600,
-                        padding: '10px 20px',
-                    }}
-                >
-                    Akzeptieren
-                </Button>
-            </DialogActions>
-        </Dialog>
+                <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end' }}>
+                    <Button onClick={decide('declined')} color="inherit" variant="outlined">
+                        Ablehnen
+                    </Button>
+                    <Button onClick={decide('accepted')} variant="contained">
+                        Einverstanden
+                    </Button>
+                </Box>
+            </Paper>
+        </Slide>
     );
 };
 

@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Redaktion · FF Hausmannstätten</title>
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body>
+
+<!-- Anmeldung ------------------------------------------------------------- -->
+<div id="login" class="login">
+  <form class="login-card" id="login-form">
+    <div class="login-mark">FF</div>
+    <h1>Redaktion</h1>
+    <p class="muted">Feuerwehr Hausmannstätten</p>
+    <label for="login-key">Zugangsschlüssel</label>
+    <input id="login-key" type="password" autocomplete="current-password" placeholder="API-Schlüssel" required />
+    <label class="check"><input type="checkbox" id="login-remember" checked /> Angemeldet bleiben</label>
+    <button type="submit" class="btn primary block">Anmelden</button>
+    <p class="login-error" id="login-error" hidden></p>
+    <p class="login-hint">
+      Der Schlüssel steht beim Start des Servers in der Konsole und in
+      <code>server/data/api-key.txt</code>.
+    </p>
+  </form>
+</div>
+
+<!-- Oberflaeche ----------------------------------------------------------- -->
+<div id="app" hidden>
+  <header class="topbar">
+    <div class="brand"><span class="mark">FF</span> Redaktion Hausmannstätten</div>
+    <nav class="tabs" id="tabs">
+      <button class="tab is-active" data-view="posts">Einsätze</button>
+      <button class="tab" data-view="categories">Kategorien</button>
+      <button class="tab" data-view="media">Medien</button>
+      <button class="tab" data-view="members">Mannschaft</button>
+      <button class="tab" data-view="fleet">Fuhrpark</button>
+      <button class="tab" data-view="settings">Kennzahlen</button>
+    </nav>
+    <div class="topbar-right">
+      <a class="link" id="site-link" href="/wp-json/wp/v2/posts?_embed=1" target="_blank" rel="noreferrer">API ansehen</a>
+      <button class="btn ghost" id="logout">Abmelden</button>
+    </div>
+  </header>
+
+  <!-- Einsaetze ----------------------------------------------------------- -->
+  <main class="view is-active" id="view-posts">
+    <section class="list-pane">
+      <div class="pane-head">
+        <input type="search" id="post-search" placeholder="Einsätze durchsuchen …" />
+        <select id="post-status-filter">
+          <option value="any">Alle</option>
+          <option value="publish">Veröffentlicht</option>
+          <option value="draft">Entwürfe</option>
+        </select>
+        <button class="btn primary" id="new-post">+ Neuer Einsatz</button>
+      </div>
+      <ul class="list" id="post-list"></ul>
+      <p class="empty" id="post-list-empty" hidden>Keine Einsätze gefunden.</p>
+    </section>
+
+    <section class="edit-pane" id="post-editor" hidden>
+      <div class="pane-head">
+        <h2 id="post-editor-title">Einsatz bearbeiten</h2>
+        <div class="spacer"></div>
+        <button class="btn ghost danger" id="delete-post" hidden>Löschen</button>
+        <button class="btn ghost" id="cancel-post">Schließen</button>
+        <button class="btn primary" id="save-post">Speichern</button>
+      </div>
+
+      <div class="form-grid">
+        <label class="field wide">
+          <span>Titel</span>
+          <input id="f-title" type="text" placeholder="z. B. Verkehrsunfall auf der B73" />
+        </label>
+
+        <label class="field wide">
+          <span>Kurzfassung <em>steht in der Übersicht unter dem Titel</em></span>
+          <input id="f-excerpt" type="text" placeholder="Ein Satz, worum es ging" />
+        </label>
+
+        <label class="field">
+          <span>Datum und Uhrzeit</span>
+          <input id="f-date" type="datetime-local" />
+        </label>
+
+        <label class="field">
+          <span>Status</span>
+          <select id="f-status">
+            <option value="publish">Veröffentlicht</option>
+            <option value="draft">Entwurf</option>
+          </select>
+        </label>
+
+        <label class="field">
+          <span>Einsatzart</span>
+          <select id="f-type"></select>
+        </label>
+
+        <div class="field wide">
+          <span>Fahrzeuge</span>
+          <div class="chips" id="f-vehicles"></div>
+        </div>
+
+        <div class="field wide">
+          <span>Weitere Organisationen</span>
+          <div class="chips" id="f-organisations"></div>
+        </div>
+
+        <div class="field wide">
+          <span class="row-between">
+            <span>Bericht <em>Leerzeile trennt die Absätze</em></span>
+            <button type="button" class="btn tiny ghost" id="toggle-html">HTML bearbeiten</button>
+          </span>
+          <textarea id="f-content" rows="10" placeholder="Was ist passiert?"></textarea>
+          <p class="warn" id="html-warning" hidden>
+            Dieser Beitrag enthält Formatierungen, die der einfache Texteditor nicht
+            abbilden kann. Er wird deshalb als HTML bearbeitet.
+          </p>
+        </div>
+
+        <div class="field wide">
+          <span class="field-head">
+            Titelbild
+            <span class="field-tools" id="f-featured-upload"></span>
+          </span>
+          <div class="picker" id="f-featured"></div>
+        </div>
+
+        <div class="field wide">
+          <span class="field-head">
+            <span>Fotos im Bericht <em>Mehrfachauswahl</em></span>
+            <span class="field-tools" id="f-photos-upload"></span>
+          </span>
+          <div class="picker multi" id="f-photos"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="placeholder" id="post-placeholder">
+      <p>Einsatz links auswählen oder einen neuen anlegen.</p>
+    </section>
+  </main>
+
+  <!-- Kategorien ---------------------------------------------------------- -->
+  <main class="view" id="view-categories">
+    <div class="scroll">
+      <p class="note">
+        Diese Struktur steuert die Website: Einsatzarten, Fahrzeuge und Organisationen
+        erscheinen bei jedem Einsatz als Auswahl. Die drei Hauptkategorien
+        (<code>einsatze</code>, <code>fahrzeuge</code>, <code>einsatzmittel</code>)
+        dürfen nicht gelöscht werden.
+      </p>
+      <div id="category-groups"></div>
+    </div>
+  </main>
+
+  <!-- Medien -------------------------------------------------------------- -->
+  <main class="view" id="view-media">
+    <div class="scroll">
+      <div class="pane-head">
+        <h2>Medien</h2>
+        <div class="spacer"></div>
+        <label class="btn primary" for="media-upload">Bilder hochladen</label>
+        <input id="media-upload" type="file" accept="image/*" multiple hidden />
+      </div>
+      <div class="folder-bar" id="media-folders"></div>
+      <div class="dropzone" id="dropzone">Bilder hierher ziehen – sie landen im gewählten Ordner</div>
+      <div class="media-grid" id="media-grid"></div>
+      <p class="empty" id="media-empty" hidden>Noch keine Bilder hochgeladen.</p>
+    </div>
+  </main>
+
+  <!-- Mannschaft ------------------------------------------------------------ -->
+  <main class="view" id="view-members">
+    <div class="scroll">
+      <div class="group">
+        <div class="group-head">
+          <h3>Mannschaft</h3>
+          <p>
+            Erscheint auf der Seite „Mannschaft“, gruppiert nach Bereich.
+            Die Reihenfolge steuert das Feld „Reihung“ – auch die der Bereiche.
+          </p>
+        </div>
+        <div class="page-toggle" id="members-page-toggle"></div>
+        <div id="members-form"></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Fuhrpark -------------------------------------------------------------- -->
+  <main class="view" id="view-fleet">
+    <div class="scroll">
+      <div class="group">
+        <div class="group-head">
+          <h3>Fuhrpark</h3>
+          <p>
+            Die Fahrzeugseiten mit Beschreibung, technischen Daten und Fotos.
+            Nicht zu verwechseln mit „Kategorien → Fahrzeuge“: das sind die
+            Schlagworte, mit denen Einsätze verknüpft werden.
+          </p>
+        </div>
+        <div id="fleet-list"></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Kennzahlen ---------------------------------------------------------- -->
+  <main class="view" id="view-settings">
+    <div class="scroll">
+      <div class="group">
+        <div class="group-head">
+          <h3>Kennzahlen der Startseite</h3>
+          <p>Die Zahlen, die auf der Startseite hochgezählt werden.</p>
+        </div>
+        <div id="settings-form"></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="toasts" id="toasts"></div>
+
+<script src="content.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>

@@ -3,7 +3,10 @@ export interface IPost {
     title: string;
     content: string;
     categories: number[];
-    date: Date;
+    /** ISO-Datumsstring, wie ihn die WordPress-API liefert. */
+    date: string;
     excerpt: string;
-    featured_media:number
+    featured_media: number;
+    /** Aus der _embed-Antwort aufgelöst; undefined, wenn kein Bild hinterlegt ist. */
+    featured_media_url?: string;
 }

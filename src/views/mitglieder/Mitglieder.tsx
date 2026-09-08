@@ -1,95 +1,91 @@
-import React from 'react';
-import {Box, Typography, Grid, Divider, Paper} from '@mui/material';
+import React, { useMemo } from 'react';
+import { Box, Container, Grid, Typography } from '@mui/material';
 import ProfileCard from '../../components/mitglieder/ProfileCard';
-import HeaderWithBackground from "../../components/header/HeaderWithBackground";
+import ParallaxSection from "../../components/header/ParallaxSection";
+import SectionHeading from "../../components/layout/SectionHeading";
+import { Stagger, StaggerItem } from "../../components/motion/Reveal";
+import { useAPI } from "../../common/context/DataContext";
+import { groupMembers, resolveMembers } from "../../data/members";
+import NotFound from "../notfound/NotFound";
 
-const groupedMembers = {
-    Kommando: [
-        { id: 1, name: 'HBI Thomas Molidor', rank: 'Hauptbrandinspektor', function: 'Kommandant' },
-        { id: 2, name: 'OBI Johannes Lafer', rank: 'Oberbrandinspektor', function: 'Stv. Kommandant' },
-    ],
-    Zugskommandanten: [
-        { id: 3, name: 'BI Robert Zaunschirm', rank: 'Zugskommandant', function: 'Übungsbeauftragter' },
-        { id: 4, name: 'HBI a.D. Robert Molidor', rank: 'Zugskommandant', function: 'Katastrophenschutz- \nbeauftragter' },
-        { id: 5, name: 'BM Gernot Lukas', rank: 'Zugskommandant', function: 'Kraftfahrerbeauftragter' },
-    ],
-    Gruppenkommandanten: [
-        { id: 6, name: 'OBI a.D. Thomas Maier-Pongratz', rank: 'Gruppenkommandant', function: 'ÖFAST-Beauftragter' },
-        { id: 7, name: 'HLM Roland Helm', rank: 'Gruppenkommandant', function: 'MRAS-Beauftragter' },
-        { id: 8, name: 'HLM Robert Matzer', rank: 'Gruppenkommandant', function: '' },
-        { id: 9, name: 'OLM Martin Pechmann', rank: 'Gruppenkommandant', function: 'Geräte- und Maschinenmeister' },
-        { id: 10, name: 'LM Lukas Barrett', rank: 'Gruppenkommandant', function: 'Geräte- und Maschinenmeister' },
-        { id: 11, name: 'LM Thomas Lechner', rank: 'Gruppenkommandant, Kassier', function: 'Kassier' },
-    ],
-    Beauftragte: [
-        { id: 12, name: 'LM d.V. Christoph Winkler', rank: 'Verwaltungsbeauftragter', function: 'Schriftführer' },
-        { id: 13, name: 'LM d.V. Lukas Hochfellner', rank: 'Verwaltungsbeauftragter', function: 'EDV-Beauftragter' },
-        { id: 14, name: 'LM d.F. Fabian Pußwald', rank: 'Fachdienstbeauftragter', function: 'Funkbeauftragter' },
-        { id: 15, name: 'OLM d.F. Daniel Laipold', rank: 'Fachdienstbeauftragter', function: 'Küchenbeauftragter' },
-        { id: 16, name: 'OLM d.F. Clemens Lafer', rank: 'Fachdienstbeauftragter', function: 'Hydrantenbeauftragter' },
-        { id: 17, name: 'LM d.S. Matthias Gfall', rank: 'Sanitätsbeauftragter', function: 'Sanitätsbeauftragter' },
-    ]
-};
+/**
+ * Bis echte Portraits hinterlegt sind, wird bewusst eine neutrale Silhouette
+ * gezeigt - vorher stand bei allen 17 Personen dasselbe Foto.
+ */
+const PLACEHOLDER_PORTRAIT = '/images/feuerwehrMannPlatzhalterKompremiertAuf300px.png';
 
 const Mitglieder: React.FC = () => {
+    const { members, settings, isLoading } = useAPI();
+
+    // Aus dem Adminbereich, sonst die mitgelieferte Liste.
+    const groups = useMemo(() => groupMembers(resolveMembers(members)), [members]);
+    const total = useMemo(
+        () => groups.reduce((sum, [, entries]) => sum + entries.length, 0),
+        [groups]
+    );
+
+    // Im Adminbereich abgeschaltet: die Seite verhält sich, als gäbe es sie
+    // nicht. Erst nach dem Laden entscheiden, sonst blitzt die 404-Seite auf.
+    if (!isLoading && !settings.membersVisible) return <NotFound />;
+
     return (
-        <Box
-            sx={{
-                padding: '',
-                borderRadius: 2,
-                textAlign: 'center',
-                minHeight: '100vh',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-            }}
-        >
-            {Object.entries(groupedMembers).map(([group, groupMembers]) => (
-                <>
-                    {group === "Kommando" ?
-                        <HeaderWithBackground headerText={group} headerSize={"h1"} imageName={"sam_3937.jpg"}/>
-                        :
-                        <HeaderWithBackground headerText={group} headerSize={"h1"} imageName={"sam_3937.jpg"}/>
-                    }
+        <>
+            <ParallaxSection
+                image="sam_3937.jpg"
+                eyebrow="Ehrenamtlich im Dienst"
+                headerText="Unsere Mannschaft"
+                headerSize="h1"
+                heightInRem={26}
+                polygon="polygon(0 0, 100% 0, 100% 90%, 0 100%)"
+            />
 
+            <Container maxWidth="lg" sx={{ py: { xs: 5, md: 9 } }}>
+                <SectionHeading
+                    eyebrow="Führung & Funktionen"
+                    title="Kommando und Beauftragte"
+                    subtitle={`${total} Kameradinnen und Kameraden in Führungs- und Funktionsrollen - dazu die gesamte aktive Mannschaft.`}
+                />
 
-                    <Grid container spacing={2} justifyContent="center" sx={{ width: '100%', px: 2, marginTop: "4vh", marginLeft: "15vh", marginRight:"15vh" }}>
-                        {groupMembers.map((member, index) => {
-                            let gridColumn = (index % 4) + 1;
+                {groups.map(([group, groupMembersList]) => (
+                    // Fragment ohne key hatte hier bei jedem Render eine
+                    // React-Warnung erzeugt.
+                    <Box component="section" key={group} sx={{ mb: { xs: 5, md: 8 } }}>
+                        <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 3 }}>
+                            <Typography
+                                variant="h4"
+                                component="h2"
+                                sx={{ color: "primary.dark", whiteSpace: "nowrap" }}
+                            >
+                                {group}
+                            </Typography>
+                            <Box sx={{ flex: 1, height: "2px", backgroundColor: "divider" }} />
+                            <Typography variant="body2" color="text.secondary">
+                                {groupMembersList.length}
+                            </Typography>
+                        </Box>
 
-                            return (
-                                <Grid
-                                    item
-                                    xs={12}
-                                    sm={6}
-                                    md={3}
-                                    key={member.id}
-                                    sx={{
-                                        display: 'flex',
-                                        justifyContent: 'center',
-                                        gridColumn: `span ${gridColumn}`,
-                                        marginRight: "0.5vh",
-                                        marginLeft: "0.5vh",
-                                        marginBottom: "2vh"
-                                    }}
-                                >
-                                    <ProfileCard
-                                        name={member.name}
-                                        rank={member.rank}
-                                        function={member.function}
-                                        imageUrl="/images/IMG_9432.JPG"
-                                    />
-                                </Grid>
-                            );
-                        })}
-                    </Grid>
-
-                    <Divider sx={{ marginTop: '3rem', borderColor: 'rgba(0,0,0,0.1)' }} />
-                </>
-            ))}
-        </Box>
-
+                        <Stagger>
+                            {/* Vorher: marginLeft/-Right in vh (vertikale Einheit fuer
+                                horizontalen Abstand) - das hat Querscrollen erzwungen. */}
+                            <Grid container spacing={{ xs: 2, md: 3 }}>
+                                {groupMembersList.map((member) => (
+                                    <Grid item xs={6} sm={4} md={3} key={member.id} sx={{ display: "flex" }}>
+                                        <StaggerItem style={{ width: "100%", display: "flex" }}>
+                                            <ProfileCard
+                                                name={member.name}
+                                                rank={member.rank}
+                                                function={member.function}
+                                                imageUrl={member.portraitUrl || PLACEHOLDER_PORTRAIT}
+                                            />
+                                        </StaggerItem>
+                                    </Grid>
+                                ))}
+                            </Grid>
+                        </Stagger>
+                    </Box>
+                ))}
+            </Container>
+        </>
     );
 };
 

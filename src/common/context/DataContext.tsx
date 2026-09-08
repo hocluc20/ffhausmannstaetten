@@ -1,128 +1,187 @@
-import React, { createContext, useContext, useEffect, useRef, useState } from "react";
-import {fetchCategories, fetchPostsByCategory, getRenderedImage} from "../API/BASER_API";
-import { IOperation } from "../models/IOperation";
-import { ICategory } from "../models/ICategory";
-import {IPost} from "../models/IPost";
+import React, {
+    createContext,
+    useCallback,
+    useContext,
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
+} from "react";
 import {
-    filterOrganizationsFromCategories, filterPhotosFromContent, filterTextFromContent,
+    fetchCategories,
+    fetchMembers,
+    fetchPostsByCategory,
+    fetchSettings,
+    fetchVehicles,
+} from "../API/BASER_API";
+import {IOperation} from "../models/IOperation";
+import {ICategory} from "../models/ICategory";
+import {IPost} from "../models/IPost";
+import {IType} from "../models/IType";
+import {DEFAULT_SETTINGS, ISettings} from "../models/ISettings";
+import {IMember} from "../models/IMember";
+import {IVehicleDetail} from "../models/IVehicleDetail";
+import {
+    filterOrganizationsFromCategories,
+    filterPhotosFromContent,
+    filterTextFromContent,
     filterTypeFromCategories,
-    filterVehiclesFromCategories
+    filterVehiclesFromCategories,
+    listTypes,
+    stripHtml,
 } from "../bl/FilterFunctions";
 
 interface APIContextProps {
     categories: ICategory[];
     getPostsByCategory: (categoryId: number) => Promise<IPost[]>;
-    getOperations: () => Promise<IOperation[]>;
     isLoading: boolean;
+    /** Menschenlesbare Fehlermeldung, wenn das Laden fehlgeschlagen ist. */
+    error: string | null;
+    /** Erneuter Ladeversuch, z. B. aus einem Fehlerzustand heraus. */
+    reload: () => void;
     operations: IOperation[];
+    /** Alle gepflegten Einsatz- und Tätigkeitsarten, für Filter und Legende. */
+    types: IType[];
+    /** Kennzahlen der Startseite. */
+    settings: ISettings;
+    /** Mannschaft aus dem Adminbereich; leer, wenn der Endpunkt fehlt. */
+    members: IMember[];
+    /** Fuhrpark aus dem Adminbereich; leer, wenn der Endpunkt fehlt. */
+    fleet: IVehicleDetail[];
 }
 
 const APIContext = createContext<APIContextProps | undefined>(undefined);
 
-export const APIProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const toOperation = (post: IPost, categories: ICategory[]): IOperation => {
+    const type = filterTypeFromCategories(categories, post.categories);
+    return {
+    id: post.id,
+    title: stripHtml(post.title),
+    content: filterTextFromContent(post.content).join("\n"),
+    date: new Date(post.date),
+    headline: stripHtml(post.excerpt),
+    headline_image: post.featured_media,
+    // Die Filter bekommen jetzt die Kategorien DES BEITRAGS mit, sonst
+    // bekommt jeder Einsatz dieselbe Art, dieselben Fahrzeuge und dieselben
+    // Organisationen zugewiesen.
+    organisations: filterOrganizationsFromCategories(categories, post.categories),
+    photos: filterPhotosFromContent(post.content),
+    type,
+    // Ohne zugeordnete Art gilt der Beitrag als Tätigkeit - so kann ein
+    // unvollständig erfasster Eintrag die Einsatzzahl nicht verfälschen.
+    kind: type?.kind ?? "taetigkeit",
+    vehicles: filterVehiclesFromCategories(categories, post.categories),
+    headline_image_rendered: post.featured_media_url,
+    };
+};
+
+export const APIProvider: React.FC<{ children: React.ReactNode }> = ({children}) => {
     const [categories, setCategories] = useState<ICategory[]>([]);
     const [operations, setOperations] = useState<IOperation[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
-    // Use a ref for cache so updates do not trigger re-renders
+    const [error, setError] = useState<string | null>(null);
+    const [settings, setSettings] = useState<ISettings>(DEFAULT_SETTINGS);
+    const [members, setMembers] = useState<IMember[]>([]);
+    const [fleet, setFleet] = useState<IVehicleDetail[]>([]);
+    const [reloadToken, setReloadToken] = useState(0);
+    // Cache als ref, damit Aktualisierungen keine Re-Renders auslösen.
     const postsCache = useRef<Map<number, IPost[]>>(new Map());
 
-    // Helper function to get posts by category id, using the cache
-    const getPostsByCategory = async (categoryId: number): Promise<IPost[]> => {
-        if (postsCache.current.has(categoryId)) {
-            return postsCache.current.get(categoryId)!;
-        }
-        try {
-            const posts = await fetchPostsByCategory(categoryId);
-            postsCache.current.set(categoryId, posts);
-            return posts;
-        } catch (error) {
-            console.error("Error fetching posts:", error);
-            return [];
-        }
-    };
+    const getPostsByCategory = useCallback(async (categoryId: number): Promise<IPost[]> => {
+        const cached = postsCache.current.get(categoryId);
+        if (cached) return cached;
 
-    // Combined effect for loading categories and then operations.
+        const posts = await fetchPostsByCategory(categoryId);
+        postsCache.current.set(categoryId, posts);
+        return posts;
+    }, []);
+
+    const reload = useCallback(() => {
+        postsCache.current.clear();
+        setReloadToken((token) => token + 1);
+    }, []);
+
     useEffect(() => {
+        let cancelled = false;
+
         const loadData = async () => {
+            setIsLoading(true);
+            setError(null);
+
             try {
+                // Kennzahlen, Mannschaft und Fuhrpark sind fuer den
+                // Einsatzbereich unkritisch: schlaegt einer der Abrufe fehl,
+                // greifen Standardwerte bzw. die mitgelieferten Listen, und
+                // die Seite laedt trotzdem.
+                fetchSettings().then((loaded) => {
+                    if (!cancelled) setSettings(loaded);
+                });
+                fetchMembers().then((loaded) => {
+                    if (!cancelled) setMembers(loaded);
+                });
+                fetchVehicles().then((loaded) => {
+                    if (!cancelled) setFleet(loaded);
+                });
+
                 const fetchedCategories = await fetchCategories();
+                if (cancelled) return;
                 setCategories(fetchedCategories);
 
-                // Find the "einsatze" category (change slug as needed)
-                const category = fetchedCategories.find(cat => cat.slug === "einsatze");
+                const category = fetchedCategories.find((cat) => cat.slug === "einsatze");
                 if (!category) {
-                    console.warn("Category 'einsatze' not found.");
+                    if (!cancelled) {
+                        setOperations([]);
+                        setError(
+                            "Die Kategorie „Einsätze“ konnte nicht gefunden werden. " +
+                            "Bitte die Kategorien im Redaktionssystem prüfen."
+                        );
+                    }
                     return;
                 }
 
-                const posts: IPost[] = await getPostsByCategory(category.id);
-                const newOperations = await Promise.all(
-                    posts.map(async (p) => ({
-                        id: p.id,
-                        title: p.title,
-                        content: filterTextFromContent(p.content).join("\n"),
-                        date: new Date(p.date),
-                        headline: p.excerpt,
-                        headline_image: p.featured_media,
-                        organisations: filterOrganizationsFromCategories(fetchedCategories),
-                        photos: filterPhotosFromContent(p.content),
-                        type: filterTypeFromCategories(fetchedCategories),
-                        vehicles: filterVehiclesFromCategories(fetchedCategories),
-                        headline_image_rendered: p.featured_media !== 0 && await getRenderedImage(p.featured_media),
-                    }))
-                );
+                const posts = await getPostsByCategory(category.id);
+                if (cancelled) return;
 
+                const newOperations = posts
+                    .map((post) => toOperation(post, fetchedCategories))
+                    .sort((a, b) => b.date.getTime() - a.date.getTime());
 
                 setOperations(newOperations);
-            } catch (error) {
-                console.error("Error loading data:", error);
+            } catch (caught) {
+                if (cancelled) return;
+                setOperations([]);
+                setError(
+                    caught instanceof Error
+                        ? caught.message
+                        : "Die Feuerwehr-Daten konnten nicht geladen werden."
+                );
             } finally {
-                setIsLoading(false);
+                if (!cancelled) setIsLoading(false);
             }
         };
 
         loadData();
-    }, []);
+        return () => {
+            cancelled = true;
+        };
+    }, [getPostsByCategory, reloadToken]);
 
-    // getOperations is available to fetch operations on demand if needed
-    const getOperations = async (): Promise<IOperation[]> => {
-        if (operations.length > 0) return operations;
-        if (categories.length === 0) {
-            console.warn("Categories not loaded yet.");
-            return [];
-        }
-        const category = categories.find(cat => cat.slug === "einsatze");
-        if (!category) {
-            console.warn("Category 'einsatze' not found.");
-            return [];
-        }
-        try {
-            const posts = await getPostsByCategory(category.id);
-            const newOperations = posts.map(p => ({
-                id: p.id,
-                title: p.title,
-                content: p.content,
-                date: new Date(),
-                headline: "",
-                headline_image: 0,
-                organisations: [],
-                photos: [],
-                type: { id: 0, name_short: "", name_long: "" },
-                vehicles: []
-            }));
-            setOperations(newOperations);
-            return newOperations;
-        } catch (error) {
-            console.error("Error fetching operations:", error);
-            return [];
-        }
-    };
+    // Ohne useMemo bekommt jeder Consumer bei jedem Provider-Render ein neues
+    // Objekt und rendert mit, auch wenn sich nichts geändert hat.
+    const types = useMemo(() => listTypes(categories), [categories]);
 
-    return (
-        <APIContext.Provider value={{ categories, getPostsByCategory, getOperations, isLoading, operations }}>
-            {children}
-        </APIContext.Provider>
+    const value = useMemo(
+        () => ({
+            categories, getPostsByCategory, isLoading, error, reload,
+            operations, types, settings, members, fleet,
+        }),
+        [
+            categories, getPostsByCategory, isLoading, error, reload,
+            operations, types, settings, members, fleet,
+        ]
     );
+
+    return <APIContext.Provider value={value}>{children}</APIContext.Provider>;
 };
 
 export const useAPI = (): APIContextProps => {

@@ -2,6 +2,28 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Backend
+
+Das eigene Backend liegt in [`server/`](server/README.md): Node.js + Express +
+SQLite, im WordPress-REST-Format. Es ersetzt die WordPress-Installation auf
+bplaced, ohne dass am Frontend-Code etwas geaendert werden muss - umgestellt
+wird nur `REACT_APP_API_BASE`.
+
+```bash
+cd server && npm install
+npm run seed        # Beispieldaten
+npm run import:wp   # oder: bestehende WordPress-Inhalte uebernehmen
+npm start           # http://localhost:4000
+```
+
+`.env.local` im Hauptverzeichnis zeigt bereits auf dieses Backend.
+
+Einsaetze, Kategorien, Bilder und Kennzahlen werden unter
+<http://localhost:4000/admin> gepflegt. Der Zugangsschluessel steht beim Start
+in der Konsole und in `server/data/api-key.txt`.
+
+Details, Endpunkte und Betrieb: [server/README.md](server/README.md).
+
 ## Available Scripts
 
 In the project directory, you can run:

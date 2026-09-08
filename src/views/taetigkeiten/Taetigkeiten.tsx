@@ -1,117 +1,162 @@
-import React, {useState} from 'react';
-import HeaderWithBackground from "../../components/header/HeaderWithBackground";
-import {Button, Grid, Tooltip, Typography} from "@mui/material";
-import ImageWithText from "../../components/image/ImageWithText";
+import React, { useMemo, useState } from 'react';
+import { Box, Button, Container, Grid } from "@mui/material";
 import ImageWithTextBox from "../../components/image/ImageWithTextBox";
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import Box from "@mui/material/Box";
-import {mockTaetigkeiten} from "../../mockdata/mockdata";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import TaetigkeitenTable from "../../components/tables/TaetigkeitenTable";
+import { useAPI } from "../../common/context/DataContext";
+import { CardSkeletons, EmptyState, LoadError } from "../../components/feedback/DataState";
+import ParallaxSection from "../../components/header/ParallaxSection";
+import SectionHeading from "../../components/layout/SectionHeading";
+import { Stagger, StaggerItem } from "../../components/motion/Reveal";
+import Presence from "../../components/motion/Presence";
+import { motion, useReducedMotion } from "motion/react";
+import OperationFilter, {
+    EMPTY_FILTER,
+    OperationFilterValue,
+} from "../../components/operations/OperationFilter";
 
-const Taetigkeiten = () => {
+/** Wie viele Einträge als Karten oben stehen, bevor die Tabelle beginnt. */
+const FEATURED_COUNT = 4;
 
-    const [showMore, setShowMore] = useState<boolean>(false);
+const dateFormatter = new Intl.DateTimeFormat('de-AT', {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric',
+});
+
+const Taetigkeiten: React.FC = () => {
+    const [showMore, setShowMore] = useState(false);
+    const [filter, setFilter] = useState<OperationFilterValue>(EMPTY_FILTER);
+    const { operations, types, isLoading, error, reload } = useAPI();
+    const reduced = useReducedMotion();
+
+    const visible = useMemo(() => {
+        const needle = filter.search.trim().toLowerCase();
+
+        return operations.filter((operation) => {
+            if (filter.kind !== "alle" && operation.kind !== filter.kind) return false;
+            if (filter.typeId !== "alle" && operation.type?.id !== filter.typeId) return false;
+            if (!needle) return true;
+
+            return [
+                operation.title,
+                operation.headline,
+                operation.content,
+                operation.type?.name_short ?? "",
+                dateFormatter.format(operation.date),
+            ]
+                .join(" ")
+                .toLowerCase()
+                .includes(needle);
+        });
+    }, [operations, filter]);
+
+    const featured = visible.slice(0, FEATURED_COUNT);
+    const remaining = visible.slice(FEATURED_COUNT);
+
+    const renderContent = () => {
+        if (isLoading) return <CardSkeletons count={4} />;
+        if (error) return <LoadError message={error} onRetry={reload} />;
+        if (operations.length === 0) {
+            return <EmptyState message="Zurzeit sind keine Einträge verfügbar." />;
+        }
+
+        return (
+            <>
+                <OperationFilter
+                    value={filter}
+                    onChange={setFilter}
+                    types={types}
+                    resultCount={visible.length}
+                    totalCount={operations.length}
+                />
+
+                {visible.length === 0 ? (
+                    <EmptyState message="Zu dieser Auswahl gibt es keine Einträge. Bitte Filter ändern." />
+                ) : (
+                    <>
+                        {/* key am Stagger: bei jedem Filterwechsel blenden die
+                            Karten neu ein, statt stumm auszutauschen. */}
+                        <Stagger key={`${filter.kind}-${filter.typeId}-${featured.length}`}>
+                            <Grid container spacing={{ xs: 3, md: 4 }}>
+                                {featured.map((item) => (
+                                    <Grid item xs={12} lg={6} key={item.id}>
+                                        <StaggerItem>
+                                            <ImageWithTextBox
+                                                text={item.type?.name_short ?? ""}
+                                                kind={item.kind}
+                                                title={item.title}
+                                                imageUrl={item.headline_image_rendered}
+                                                boxInfo={item.headline || item.content}
+                                                date={dateFormatter.format(item.date)}
+                                                id={String(item.id)}
+                                            />
+                                        </StaggerItem>
+                                    </Grid>
+                                ))}
+                            </Grid>
+                        </Stagger>
+
+                        {remaining.length > 0 && (
+                            <>
+                                <Box sx={{ display: "flex", justifyContent: "center", py: { xs: 4, md: 6 } }}>
+                                    <Button
+                                        variant="contained"
+                                        size="large"
+                                        aria-expanded={showMore}
+                                        startIcon={showMore ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                                        onClick={() => setShowMore((previous) => !previous)}
+                                    >
+                                        {showMore
+                                            ? "Weniger anzeigen"
+                                            : `Weitere ${remaining.length} anzeigen`}
+                                    </Button>
+                                </Box>
+
+                                <Presence initial={false}>
+                                    {showMore && (
+                                        <motion.div
+                                            key="table"
+                                            initial={reduced ? { opacity: 1 } : { opacity: 0, height: 0 }}
+                                            animate={{ opacity: 1, height: "auto" }}
+                                            exit={reduced ? { opacity: 1 } : { opacity: 0, height: 0 }}
+                                            transition={{ duration: reduced ? 0 : 0.45, ease: [0.22, 1, 0.36, 1] }}
+                                            style={{ overflow: "hidden" }}
+                                        >
+                                            <TaetigkeitenTable taetigkeiten={remaining} />
+                                        </motion.div>
+                                    )}
+                                </Presence>
+                            </>
+                        )}
+                    </>
+                )}
+            </>
+        );
+    };
 
     return (
         <>
-            <HeaderWithBackground headerText={"Tätigkeiten"} headerSize={"h1"} imageName={"sam_3937.jpg"} polygon={"polygon(30% 0%, 124% 33%, 114% 62%, 68% 99%, -3% 83%, -8% 15%)"} heightInRem={20}/>
+            <ParallaxSection
+                image="sam_3937.jpg"
+                eyebrow="Was wir tun"
+                headerText="Einsätze & Tätigkeiten"
+                headerSize="h1"
+                heightInRem={26}
+                polygon="polygon(0 0, 100% 0, 100% 90%, 0 100%)"
+            />
 
-            <Grid
-                container
-                spacing={5}
-                sx={{
-                    justifyContent: 'center',
-                    width: '100%',
-                    paddingBottom: "2rem",
-                    paddingTop: "2rem",
-                    marginTop: {xs: "5rem", md: "10rem"},
-                    backgroundColor: "white",
-                }}
-            >
-                <Grid item xs={false} sm={1.4} md={1.4}></Grid>
-
-                {mockTaetigkeiten.slice(0, 2).map((item, index) => (
-                    <Grid item xs={12} sm={6} md={3} key={index + 3}>
-                        <ImageWithTextBox
-                            text={item.alarmtitelStichwort}
-                            title={item.alarmstichwort}
-                            imageUrl={item.photos[0]}
-                            link={""}
-                            boxInfo={item.title}
-                            date={item.date}
-                            id={item.id}
-                        />
-                    </Grid>
-                ))}
-                <Grid item xs={false} sm={1.4} md={1.4}></Grid>
-            </Grid>
-
-
-            <Grid
-                container
-                spacing={5}
-                sx={{
-                    justifyContent: 'center',
-                    width: '100%',
-                    paddingBottom: "2rem",
-                    paddingTop: "2rem",
-                    // marginBottom: { xs: "5rem", md: "10rem" },
-                    backgroundColor: "white",
-                }}
-            >
-                <Grid item xs={false} sm={1.4} md={1.4}></Grid>
-                {mockTaetigkeiten.slice(2, 4).map((item, index) => (
-                    <Grid item xs={12} sm={6} md={3} key={index + 3}>
-                        <ImageWithTextBox
-                            text={item.alarmtitelStichwort}
-                            title={item.alarmstichwort}
-                            imageUrl={item.photos[0]}
-                            link={""}
-                            boxInfo={item.title}
-                            date={item.date}
-                            id={item.id}
-                        />
-                    </Grid>
-                ))}
-                <Grid item xs={false} sm={1.4} md={1.4}></Grid>
-            </Grid>
-
-            <Box
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-                sx={{height: '10vh'}} // Zentriert den Button vertikal und horizontal
-            >
-                <Tooltip title={showMore ? "Weniger anzeigen" : "Mehr anzeigen"} arrow>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        sx={{
-                            width: '5rem',
-                            height: '5rem',
-                            borderRadius: '50%', // Macht den Button rund
-                            fontSize: '4rem',
-                            display: 'flex',
-                            flexDirection: "inherit",
-                            justifyContent: 'center',
-                            alignItems: 'center', // Zentriert das Icon im Button
-                            textAlign: "center",
-                        }}
-                        onClick={() => setShowMore(!showMore)}
-                    >{showMore ? <ArrowUpwardIcon sx={{fontSize: "3rem"}}/> :
-                        <ArrowDownwardIcon sx={{fontSize: "3rem"}}/>}</Button>
-                </Tooltip>
-            </Box>
-
-            {
-                showMore && (
-                    <TaetigkeitenTable taetigkeiten={mockTaetigkeiten.slice(4)}/>
-                )
-            }
+            <Container maxWidth="lg" sx={{ py: { xs: 5, md: 9 } }}>
+                <SectionHeading
+                    eyebrow="Chronik"
+                    title="Einsätze und Tätigkeiten"
+                    subtitle="Einsätze sind rot gekennzeichnet, Tätigkeiten wie Übungen und Veranstaltungen gelb. Über die Filter lässt sich beides getrennt betrachten."
+                />
+                {renderContent()}
+            </Container>
         </>
-    )
-        ;
+    );
 };
 
 export default Taetigkeiten;

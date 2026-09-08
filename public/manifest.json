@@ -1,6 +1,8 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "FF Hausmannstätten",
+  "name": "Freiwillige Feuerwehr Hausmannstätten",
+  "description": "Aktuelle Einsätze und Tätigkeiten, Mannschaft und Fuhrpark der Freiwilligen Feuerwehr Hausmannstätten.",
+  "lang": "de-AT",
   "icons": [
     {
       "src": "favicon.ico",
@@ -20,6 +22,6 @@
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "theme_color": "#b32b2b",
+  "background_color": "#f7f7f7"
 }
