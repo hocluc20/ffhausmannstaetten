@@ -123,7 +123,7 @@ const TaetigkeitDetailedView = () => {
                     {taetigkeit.organisations.length > 0 && (
                         <Box mt={2}>
                             <Typography variant="body1" gutterBottom>
-                                <strong>Eingesetzte Feuerwehren:</strong>
+                                <strong>Eingesetzte Einsatzorganisationen:</strong>
                             </Typography>
                             <Grid container spacing={1}>
                                 {taetigkeit.organisations.map((feuerwehr) => (
@@ -138,7 +138,7 @@ const TaetigkeitDetailedView = () => {
                     {taetigkeit.vehicles.length > 0 && (
                         <Box mt={2}>
                             <Typography variant="body1" gutterBottom>
-                                <strong>Eingesetzte Fahrzeuge:</strong>
+                                <strong>Eingesetzte Fahrzeuge der FF Hausmannstätten:</strong>
                             </Typography>
                             <Grid container spacing={1}>
                                 {taetigkeit.vehicles.map((auto) => (

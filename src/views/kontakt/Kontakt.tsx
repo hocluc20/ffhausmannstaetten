@@ -33,15 +33,15 @@ const MAPS_LINK = `https://www.google.com/maps/search/?api=1&query=${encodeURICo
 const CONTACTS = [
     {
         role: "Feuerwehrkommandant",
-        name: "HBI Daniel Rothdeutsch",
-        phone: "+43 664 5403041",
-        tel: "+436645403041",
+        name: "HBI Thomas Molidor",
+        phone: "+43 664 75058043",
+        tel: "+4366475058043",
     },
     {
         role: "EDV-Beauftragter",
-        name: "HBI a.D. Robert Molidor",
-        phone: "+43 660 2124170",
-        tel: "+436602124170",
+        name: "LM d.V. Lukas Hochfellner",
+        phone: "+43 664 1822812",
+        tel: "+436641822812",
     },
 ];
 
@@ -95,26 +95,17 @@ const Kontakt: React.FC = () => {
                                 Im Notfall: 122
                             </Typography>
                             <Typography variant="body2" color="text.secondary">
-                                Feuerwehr-Notruf, rund um die Uhr besetzt. Diese Seite ist kein
-                                Notrufkanal - bei Gefahr bitte immer telefonisch alarmieren.
+                                Feuerwehr-Notruf, rund um die Uhr besetzt. 
                             </Typography>
                         </Box>
-                        <Button
-                            variant="contained"
-                            size="large"
-                            href="tel:122"
-                            startIcon={<PhoneIcon />}
-                            sx={{ alignSelf: { xs: "stretch", sm: "center" } }}
-                        >
-                            122 anrufen
-                        </Button>
+                        
                     </CardContent>
                 </Card>
 
                 <SectionHeading
                     eyebrow="Erreichbarkeit"
                     title="So erreichen Sie uns"
-                    subtitle="Für allgemeine Anfragen, Terminvereinbarungen oder Anliegen der Gemeinde."
+                    subtitle="Für Fragen jeglicher Art stehen wir Ihnen gerne zur Verfügung."
                 />
 
                 <Stagger>
@@ -143,8 +134,8 @@ const Kontakt: React.FC = () => {
 
                                         <Box sx={{ display: "flex", gap: 1.5, alignItems: "center", mt: 2 }}>
                                             <EmailIcon sx={{ color: "primary.main" }} />
-                                            <Link href="mailto:kdo.020@bfvgu.steiermark.at" underline="hover">
-                                                kdo.020@bfvgu.steiermark.at
+                                            <Link href="mailto:ff.hausmannstaetten@bfvgu.at" underline="hover">
+                                                ff.hausmannstaetten@bfvgu.at
                                             </Link>
                                         </Box>
 

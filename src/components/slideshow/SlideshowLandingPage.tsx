@@ -163,8 +163,7 @@ const SlideshowLandingPage: React.FC = () => {
                         textShadow: "0 2px 12px rgba(0,0,0,.6)",
                     }}
                 >
-                    Ehrenamtlich im Einsatz für unsere Gemeinde - bei Brand, technischer
-                    Hilfeleistung und Katastrophenschutz.
+                    Ehrenamtlich im Einsatz für unsere Marktgemeinde und die Sicherheit der Bevölkerung.
                 </Typography>
 
                 <Box

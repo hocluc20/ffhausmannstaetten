@@ -43,7 +43,7 @@ const Mitglieder: React.FC = () => {
                 <SectionHeading
                     eyebrow="Führung & Funktionen"
                     title="Kommando und Beauftragte"
-                    subtitle={`${total} Kameradinnen und Kameraden in Führungs- und Funktionsrollen - dazu die gesamte aktive Mannschaft.`}
+                    subtitle={`Der gesetzliche und erweiterte Ausschuss der FF Hausmannstätten umfasst insgesamt ${total} Personen.`}
                 />
 
                 {groups.map(([group, groupMembersList]) => (

@@ -106,7 +106,7 @@ const FahrzeugDetail: React.FC = () => {
 
             <Container maxWidth="lg" sx={{ pb: { xs: 6, md: 10 } }}>
                 {/* Hauptbild überlappt den Kopfbereich. */}
-                <Reveal>
+                {/* <Reveal> */}
                     <Card
                         sx={{
                             mt: { xs: -10, md: -14 },
@@ -115,7 +115,11 @@ const FahrzeugDetail: React.FC = () => {
                             borderColor: "divider",
                             boxShadow: "0 20px 50px rgba(26,22,20,.2)",
                             overflow: "hidden",
+                            position: "relative",
+                            zIndex: 10,
+
                         }}
+                        
                     >
                         <Box
                             sx={{
@@ -139,7 +143,7 @@ const FahrzeugDetail: React.FC = () => {
                             />
                         </Box>
                     </Card>
-                </Reveal>
+                {/* </Reveal> */}
 
                 <Grid container spacing={{ xs: 3, md: 4 }}>
                     {/* Beschreibung und Aufgaben */}

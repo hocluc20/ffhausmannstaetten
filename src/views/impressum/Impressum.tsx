@@ -53,7 +53,7 @@ const Impressum: React.FC = () => {
                                 <Typography variant="body1" paragraph>
                                     <strong>Vertreten durch:</strong>
                                     <br />
-                                    HBI Daniel Rothdeutsch, Feuerwehrkommandant
+                                    HBI Thomas Molidor, Feuerwehrkommandant
                                 </Typography>
                                 <Typography variant="body1" paragraph>
                                     <strong>Blattlinie:</strong> Information der Bevölkerung über die

@@ -78,11 +78,11 @@ const Footer: React.FC = () => {
                             8071 Hausmannstätten
                         </Typography>
                         <Link
-                            href="mailto:kdo.020@bfvgu.steiermark.at"
+                            href="mailto:ff.hausmannstaetten@bfvgu.at"
                             underline="hover"
                             sx={{ ...linkSx, mt: 2 }}
                         >
-                            <Email sx={{ mr: 1 }} /> kdo.020@bfvgu.steiermark.at
+                            <Email sx={{ mr: 1 }} /> ff.hausmannstaetten@bfvgu.at
                         </Link>
                     </Grid>
 

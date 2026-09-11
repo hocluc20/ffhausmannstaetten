@@ -165,7 +165,7 @@ const Home: React.FC = () => {
                 <SectionHeading
                     eyebrow="Berichte"
                     title="Aktuelle Einsätze und Tätigkeiten"
-                    subtitle="Ein Auszug aus unserer Arbeit - von der technischen Hilfeleistung bis zum Brandeinsatz."
+                    subtitle="Ein Auszug aus unserer Arbeit."
                 />
 
                 {renderNews()}
